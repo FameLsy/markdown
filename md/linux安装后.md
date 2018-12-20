@@ -102,7 +102,7 @@ sudo apt install gnome-tweak-tool
 打开之后，先安装一个浏览器插件。否则会有相应的警告，这样是无法安装扩展的。  
 **第三步，安装常用扩展**  
 *User THemes*：用来设置主题的  
-*Hide to Bar*：用来隐藏lunix上边栏
+*Hide top Bar*：用来隐藏lunix上边栏
 *Dock to bash*：用来设置启动器的
 
 **美化资源下载网站**    

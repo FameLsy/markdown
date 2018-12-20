@@ -140,9 +140,19 @@ cd ~/blog/source/_posts
 hexo clean && hexo g && hexo d
 ```
 # 挂载到Github
-## **Github** 操作
-## 本地**Hexo**操作
+**安装依赖**
+```
+npm install hexo-deployer-git --save
+```
+**修改站点配置文件**  
+仓库名必须是 *famelsy.github.io*
+```
+deploy:
+  type: git
+  repo : git@github.com:FameLsy/famelsy.github.io.git
+  branch: master
 
+```
 # 个性化**Hexo**
 
 ## 自定义CSS样式
@@ -264,4 +274,50 @@ vim ~/blog/themes/next/source/css/_custom/mystyle.styl
 ```linux
 #输入@impolt "mystyle.styl"导入
 sudo vim ~/blog/themes/next/source/css/_custom/custom.styl
+```
+
+# 主题
+**下载next主题**
+```
+ git clone https://github.com/theme-next/hexo-theme-next themes/next
+```
+**不展开全部内容**  
+主题配置文件搜索关键字*auto_excerpt*,*enable*改为*true*
+```
+auto_excerpt:
+  enable: true
+  length: 150
+```
+**添加「标签/分类」页面**  
+新建页面
+```
+ cd ~/blog
+ hexo new page tags
+ hexo new page tags categories
+```
+编辑刚刚新建的页面
+```
+ vim source/tags/index.md
+ vim source/categories/index.md
+```
+添加 *type: "tags"*
+```
+---
+title: tags
+type: "tags"
+date: 2018-12-20 21:00:02
+---
+# 对于分类页面就是
+title: 分类
+date: 2014-12-22 12:39:04
+type: "categories"
+---
+```
+修改主题配置文件
+```
+menu:
+  home: /
+  archives: /archives
+  tags: /tags
+  categories: /categories
 ```
