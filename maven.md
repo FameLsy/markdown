@@ -308,4 +308,192 @@ mvn process-resources "-Dcommand.line.prop=hello again"
 ```
 至少定义4个内容：*< groupId >*、*< artifactId >*、*< version >*、*< scope >*  
 **Maven在哪里引用依赖关系？**  
-Maven查找您的本地存储库（$ {user.home} /.m2 / repository是默认位置）以查找所有依赖项
+1. Maven查找的本地存储库（$ {user.home} /.m2 / repository是默认位置）以查找所有依赖项
+2. 远程仓库：http://repo.maven.apache.org/maven2/
+
+# 远程仓库部署JAR
+pom.xml文件(配置存储库URL)
+```xml
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+ 
+  <groupId>com.mycompany.app</groupId>
+  <artifactId>my-app</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+ 
+  <name>Maven Quick Start Archetype</name>
+  <url>http://maven.apache.org</url>
+ 
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+      <version>1.0.4</version>
+    </dependency>
+  </dependencies>
+ 
+  <build>
+    <filters>
+      <filter>src/main/filters/filters.properties</filter>
+    </filters>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+  </build>
+  <!--
+   |
+   |
+   |
+   -->
+  <distributionManagement>
+    <repository>
+      <id>mycompany-repository</id>
+      <name>MyCompany Repository</name>
+      <url>scp://repository.mycompany.com/repository/maven2</url>
+    </repository>
+  </distributionManagement>
+</project>
+```
+ setting.xml文件(配置连接到存储库的身份验证信息)
+ ```xml
+ <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                      http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  ...
+  <servers>
+    <server>
+      <id>mycompany-repository</id>
+      <username>jvanzyl</username>
+      <!-- Default value is ~/.ssh/id_dsa -->
+      <privateKey>/path/to/identity</privateKey> (default is ~/.ssh/id_dsa)
+      <passphrase>my_key_passphrase</passphrase>
+    </server>
+  </servers>
+  ...
+</settings>
+```
+# 创建文档
+```
+mvn archetype:generate \
+  -DarchetypeGroupId=org.apache.maven.archetypes \
+  -DarchetypeArtifactId=maven-archetype-site \
+  -DgroupId=com.mycompany.app \
+  -DartifactId=my-app-site
+```
+# 构建其他项目类型
+```
+mvn archetype:generate \
+    -DarchetypeGroupId=org.apache.maven.archetypes \
+    -DarchetypeArtifactId=maven-archetype-webapp \
+    -DgroupId=com.mycompany.app \
+    -DartifactId=my-webapp
+```
+这将创建一个名为my-webapp的目录，其中包含以下项目描述符：
+```xml
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+ 
+  <groupId>com.mycompany.app</groupId>
+  <artifactId>my-webapp</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>war</packaging>
+ 
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+ 
+  <build>
+    <finalName>my-webapp</finalName>
+  </build>
+</project>
+```
+注意< packaging >元素,告诉Maven构建为WAR
+```
+mvn package
+```
+将会生成 *target / my-webapp.war*
+
+# 一次性构建多个项目
+**在两个项目的上级目录添加pom.xml**
+```
++- pom.xml
++- my-app
+| +- pom.xml
+| +- src
+|   +- main
+|     +- java
++- my-webapp
+| +- pom.xml
+| +- src
+|   +- main
+|     +- webapp
+```
+输入以下内容
+```
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+ 
+  <groupId>com.mycompany.app</groupId>
+  <artifactId>app</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+ 
+  <modules>
+    <module>my-app</module>
+    <module>my-webapp</module>
+  </modules>
+</project>
+```
+webapp依赖JAR，所以将它添加到my-webapp / pom.xml
+```
+  ...
+  <dependencies>
+    <dependency>
+      <groupId>com.mycompany.app</groupId>
+      <artifactId>my-app</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    ...
+  </dependencies>
+  ```
+my-app/pom.xml和my-webapp/pom.xml均添加 < parent >元素
+```
+<project 
+...
+  <parent>
+    <groupId>com.mycompany.app</groupId>
+    <artifactId>app</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+...
+</project>
+  ```
+执行
+```
+mvn verify
+```
