@@ -148,10 +148,112 @@ mvn compile
 |url|指示可以找到项目站点的位置。这通常用于Maven生成的文档中|
 |description|项目的基本描述。这通常用于Maven生成的文档中|
 
-# 原型(Archetypes)
-**什么是原型**  
-Archetype是一个Maven项目模板工具包  
-**使用原型**
+
+# 过滤资源文件
+目的：让资源文件包含只能在构建时提供的值  
+方法：使用 *$ { < property name > }*获取定义的属性  
+定义的属性可以是：
+1. pom.xml中定义的值
+2. setting.xml中定义的值
+3. 外部属性文件定义的值
+4. 系统属性
+
+**首先，在复制时让maven过滤资源**  
+该目录下的资源会被过滤，通过 *$ { < property name > }*获取到值。
 ```
-mvn archetype ：generate
+<project>
+...
+<build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+  </build>
+...
+</project>
 ```
+**创建application.properties资源文件**
+```
+src/main/resources/META-INF/application.properties
+```
+**获取POM某些默认的值(无需定义)**  
+$ { project.name }指的是项目的名称  
+$ { project.version }指的是项目的版本  
+```
+# application.properties
+application.name=${project.name}
+application.version=${project.version}
+```
+**复制和过滤资源的构建生命周期阶段**
+```
+mvn process-resources
+```
+**查看target/classes下的application.properties**
+```
+#pplication.properties
+application.name=my-app
+application.version=1.0-SNAPSHOT
+```
+**引用外部文件中定义的属性**  
+创建 *src / main / filters / filter.properties*  
+```
+# filter.properties
+my.filter.value=hello!
+```
+引用外部文件
+```
+...
+ <build>
+    <filters>
+      <filter>src/main/filters/filter.properties</filter>
+    </filters>
+...
+```
+在application.properties引用属性
+```
+# application.properties
+message=${my.filter.value}
+```
+
+**在pom.xml种定义属性**
+```
+<project>
+...
+ <properties>
+    <my.filter.value>hello</my.filter.value>
+  </properties>
+...
+</project>
+```
+
+**获取系统属性或者-D参数定义的属性**
+```
+# application.properties
+java.version=${java.version}
+command.line.prop=${command.line.prop}
+```
+command.line.prop在命令行上定义
+```
+mvn process-resources "-Dcommand.line.prop=hello again"
+```
+
+# 外部依赖
+```
+<project>
+...
+ <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  ...
+</project>
+```
+至少定义4个内容：*< groupId >*、*< artifactId >*、*< version >*、*< scope >*  
+**Maven在哪里引用依赖关系？**  
+Maven查找您的本地存储库（$ {user.home} /.m2 / repository是默认位置）以查找所有依赖项
