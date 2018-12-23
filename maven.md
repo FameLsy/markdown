@@ -512,11 +512,11 @@ Maven 有3个内置的生命周期
 |--|--|
 |validate| - 验证项目是否正确并且所有必要信息都可用|
 |compile| - 编译项目的源代码|
-|test| - 使用合适的单元测试框架测试编译的源代码。这些测试不应要求打包或部署代码
-|package| - 获取已编译的代码并将其打包为可分发的格式，例如JAR。
-|verify| - 对集成测试结果进行任何检查，以确保满足质量标准
-|install| - 将软件包安装到本地存储库中，以便在本地用作其他项目的依赖项
-|deploy| - 在构建环境中完成，将最终包复制到远程存储库以与其他开发人员和项目共享。
+|test| - 使用合适的单元测试框架测试编译的源代码。这些测试不应要求打包或部署代码|
+|package| - 获取已编译的代码并将其打包为可分发的格式，例如JAR。|
+|verify| - 对集成测试结果进行任何检查，以确保满足质量标准|
+|install| - 将软件包安装到本地存储库中，以便在本地用作其他项目的依赖项|
+|deploy| - 在构建环境中完成，将最终包复制到远程存储库以与其他开发人员和项目共享。|
 
 这些构建阶段会按顺序执行
 ```
@@ -540,16 +540,16 @@ mvn clean dependency:copy-dependencies package
 在 *< packaging >*元素可以设置如*jar*、*war*、*ear*、*pom*等值，没有指定，默认为 *jar*。
 每一个包都包含一个绑定到特定阶段的目标列表，如 *jar*包将绑定以下目标以构建生命周期的阶段
 
-|(阶段)Phase|	（插件目标）plugin:goal
+|(阶段)Phase|	（插件目标）plugin:goal|
 |--|--|
-process-resources|	resources:resources
-compile|	compiler:compile
-process-test-resources|	resources:testResources
-test-compile|	compiler:testCompile
-test|	surefire:test
-package|	jar:jar
-install| install:install
-deploy|	deploy:deploy
+|process-resources|	resources:resources|
+|compile|	compiler:compile|
+|process-test-resources|	resources:testResources|
+|test-compile|	compiler:testCompile|
+|test|	surefire:test|
+|package|	jar:jar|
+|install| install:install|
+|deploy|	deploy:deploy|
 
 **插件**  
 除了像 *package*这样的默认绑定目标，在项目中配置插件是第二种向阶段添加目标的方式。  
@@ -608,49 +608,49 @@ deploy|	deploy:deploy
 
 **clean生命周期**  
 
-构建阶段|	描述
+|构建阶段|	描述|
 |--|--|
-pre-clean|	在实际项目清理之前执行所需的过程
-clean|	删除上一个版本生成的所有文件
-post-clean|	执行完成项目清理所需的过程
+|pre-clean|	在实际项目清理之前执行所需的过程|
+|clean|	删除上一个版本生成的所有文件|
+|post-clean|	执行完成项目清理所需的过程|
 
 **default生命周期**
 
-构建阶段|	描述
+|构建阶段|	描述|
 |--|--|
-validate|	验证项目是否正确，并提供所有必要信息。
-initialize|	初始化构建状态，例如设置属性或创建目录。
-generate-sources|	生成任何包含在编译中的源代码。
-process-sources|	处理源代码，例如过滤任何值。
-generate-resources|	生成包含在包中的资源。
-process-resources|	将资源复制并处理到目标目录，准备打包。
-compile|	编译项目的源代码。
-process-classes|	从编译中对生成的文件进行后处理，例如对Java类进行字节码增强。
-generate-test-sources|	生成任何包含在编译中的测试源代码。
-process-test-sources|	处理测试源代码，例如过滤任何值。
-generate-test-resourcess|	创建用于测试的资源。
-process-test-resources|	将资源复制并处理到测试目标目录中。
-test-compile|	将测试源代码编译到测试目标目录中
-process-test-classes|	对来自测试编译的生成文件进行后处理，例如对Java类进行字节码增强。适用于Maven 2.0.5及以上版本。
-test|	使用合适的单元测试框架运行测试。这些测试不应要求打包或部署代码。
-prepare-package|	在实际包装之前执行准备包装所需的任何操作。这通常会导致包的解包，处理版本。（Maven 2.1及以上）
-package|	获取已编译的代码并将其打包为可分发的格式，例如JAR。
-pre-integration-test|	在执行集成测试之前执行所需的操作。这可能涉及诸如设置所需环境之类的事情。
-integration-test|	如有必要，将程序包处理并部署到可以运行集成测试的环境中。
-post-integration-test|	执行集成测试后执行所需的操作。这可能包括清理环境。
-verify|	运行任何检查以验证包是否有效并符合质量标准。
-install|	将软件包安装到本地存储库中，以便在本地用作其他项目的依赖项。
-deploy|	在集成或发布环境中完成，将最终包复制到远程存储库以与其他开发人员和项目共享。
+|validate|	验证项目是否正确，并提供所有必要信息。|
+|initialize|	初始化构建状态，例如设置属性或创建目录。|
+|generate-sources|	生成任何包含在编译中的源代码。|
+|process-sources|	处理源代码，例如过滤任何值。|
+|generate-resources|	生成包含在包中的资源。|
+|process-resources|	将资源复制并处理到目标目录，准备打包。|
+|compile|	编译项目的源代码。|
+|process-classes|	从编译中对生成的文件进行后处理，例如对Java类进行字节码增强。|
+|generate-test-sources|	生成任何包含在编译中的测试源代码。|
+|process-test-sources|	处理测试源代码，例如过滤任何值。|
+|generate-test-resourcess|	创建用于测试的资源。|
+|process-test-resources|	将资源复制并处理到测试目标目录中。|
+|test-compile|	将测试源代码编译到测试目标目录中|
+|process-test-classes|	对来自测试编译的生成文件进行后处理，例如对Java类进行字节码增强。适用于Maven 2.0.5及以上版本。|
+|test|	使用合适的单元测试框架运行测试。这些测试不应要求打包或部署代码。|
+|prepare-package|	在实际包装之前执行准备包装所需的任何操作。这通常会导致包的解包，处理版本。（Maven 2.1及以上）|
+|package|	获取已编译的代码并将其打包为可分发的格式，例如JAR。|
+|pre-integration-test|	在执行集成测试之前执行所需的操作。这可能涉及诸如设置所需环境之类的事情。|
+|integration-test|	如有必要，将程序包处理并部署到可以运行集成测试的环境中。|
+|post-integration-test|	执行集成测试后执行所需的操作。这可能包括清理环境。|
+|verify|	运行任何检查以验证包是否有效并符合质量标准。|
+|install|	将软件包安装到本地存储库中，以便在本地用作其他项目的依赖项。|
+|deploy|	在集成或发布环境中完成，将最终包复制到远程存储库以与其他开发人员和项目共享。|
 
 **site生命周期**
 
 
-构建阶段|	描述
+|构建阶段|	|
 |--|--|
-pre-site|	在实际项目站点生成之前执行所需的过程
-site|	生成项目的站点文档
-post-site|	执行完成站点生成所需的进程，并准备站点部署
-site-deploy|	将生成的站点文档部署到指定的Web服务器
+|pre-site|	在实际项目站点生成之前执行所需的过程|
+|site|	生成项目的站点文档|
+|post-site|	执行完成站点生成所需的进程，并准备站点部署|
+|site-deploy|	将生成的站点文档部署到指定的Web服务器|
 
 # 内置生命周期绑定
 构建阶段默认绑定的目标
@@ -665,53 +665,53 @@ clean|	clean:clean
 
 packaging *ejb / ejb3 / jar / par / rar / war*
 
-Phase|	plugin:goal
+|Phase|	plugin:goal|
 |--|--|
-process-resources|	resources:resources
-compil|e	compiler:compile
-process-test-resources|	resources:testResources
-test-compile|	compiler:testCompile
-test|	surefire:test
-package|	ejb:ejb or ejb3:ejb3 or jar:jar or par:par or rar:rar or war:war
-install|	install:install
-deploy|	deploy:deploy
+|process-resources|	resources:resources|
+|compil|e	compiler:compile|
+|process-test-resources|	resources:testResources|
+|test-compile|	compiler:testCompile|
+|test|	surefire:test|
+|package|	ejb:ejb or ejb3:ejb3 or jar:jar or par:par or rar:rar or war:war|
+|install|	install:install|
+|deploy|	deploy:deploy|
 
 packaging *ear*
 
-Phase|	plugin:goal
+|Phase|	plugin:goal|
 |--|--|
-generate-resources|	ear:generate-application-xml
-process-resources|	resources:resources
-package|	ear:ear
-install|	install:install
-deploy|	deploy:deploy
+|generate-resources|	ear:generate-application-xml|
+|process-resources|	resources:resources|
+|package|	ear:ear|
+|install|	install:install|
+|deploy|	deploy:deploy|
 
 Packaging *maven-plugin*
 
 
-Phase|	plugin:goal
+|Phase|	plugin:goal|
 |--|--|
-generate-resources|	plugin:descriptor
-process-resources|	resources:resources
-compile|	compiler:compile
-process-test-resources|	resources:testResources
-test-compile|	compiler:testCompile
-test|	surefire:test
-package|	jar:jar and plugin:addPluginArtifactMetadata
-install|	install:install
-deploy|	deploy:deploy
+|generate-resources|	plugin:descriptor|
+|process-resources|	resources:resources|
+|compile|	compiler:compile|
+|process-test-resources|	resources:testResources|
+|test-compile|	compiler:testCompile|
+|test|	surefire:test|
+|package|	jar:jar and plugin:addPluginArtifactMetadata|
+|install|	install:install|
+|deploy|	deploy:deploy|
 
 Packaging *pom*
 
-Phase|	plugin:goal
+|Phase|	plugin:goal|
 |--|--|
-package||	
-install|	install:install
-deploy|	deploy:deploy
+|package||	
+|install|	install:install|
+|deploy|	deploy:deploy|
 
 **site生命周期绑定**
 
-Phase|	plugin:goal
+|Phase|	plugin:goal|
 |--|--|
-site|	site:site
-site-deploy|	site:deploy
+|site|	site:site|
+|site-deploy|	site:deploy|
