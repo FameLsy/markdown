@@ -954,3 +954,273 @@ Arrays.sort(words,
 ```
 
 在底层，Arrays.sort接受的是Comparator< String >这个对象,在这个对象调用compare方法时会执行lambda表达式。
+
+## 方法引用
+使用现成的方法传递到其他代码的某个动=动作
+如
+```java
+Timer t = new Timer(1000, event -> System.out.pringtln(event));
+```
+
+# 内部类（inner class）
+
+为什么使用内部类?  
+1. 内部类方法可以访问该类定义所在的作用域中的数据, 包括私有的数据
+2. 内部类可以对同一个包中的其他类隐藏起来
+3. 当想要定义一个回调函数且不想编写大量代码时,使用匿名内部类比较便捷
+
+
+# 异常
+
+## 异常分类
+
+异常对象都是派生于 Throwable 类的一个实例,但在下一层立即分解为两个分
+支 : Error 和 Exception
+
+**Error**  
+Java 运行时系统的内部错误和资源耗尽错误
+
+**Exception**  
+真正需要关心的异常，分解为两个分支 :
+1. RuntimeException :程序错误导致的异常属于 RuntimeException
+2. 其他异常 :程序本身没有问题,但由于像I/O错误这类问题导致的异常属于其他异常（ＩＯException）
+
+**RuntimeException包含情况**  
+1. 错误的类型转换
+2. 数组访问越界
+3. 访问dnull指针
+
+**其他异常包含情况**  
+1. 试图在文件尾部后面读取数据
+2. 试图打开一个不存在的文件
+3. 试图根据给定的字符串查找 Class 对象, 而这个字符串表示的类并不存在
+
+**受查异常和非受查异常**  
+非受查异常: 派生于Error类或RuntimeException类的所有异常称为非受查( unchecked)异常  
+受查异常：其他的异常称为受查 ( checked ) 异常
+
+## 声明受查异常
+如果是受查异常，应该在方法首部声明所有可能抛出的异常(通过关键字throws)  
+如下是Java类库中的一个类的构造器方法的声明
+```java
+public FilelnputStream ( String name ) throws FileNotFoundException
+```
+
+什么时候应该声明抛出异常？
+1. 调用一个抛出受査异常的方法
+2. 程序运行过程中发现错误 , 并且利用 throw 语句抛出一个受查异常
+3. 对于Java 的内部错误（Error），不必声明
+4. RuntimeException,不必声明
+5. 总结：方法必须抛出所有可能抛出的受查异常，非受查异常要么不可控制(Error)要么就应该避免发生(RuntimeException)
+
+**子类异常和父类异常**  
+
+1. 在子类中覆盖了父类的一个方法 ,子类方法中声明的受查异常不能比父类方法中声明的异常更通用(子类方法中可以抛出更特定的异常, 或者根本不抛出任何异常)
+2. 父类类方法没有抛出任何受查异常, 子类也不能抛出任何受查异常
+
+## 抛出异常
+如抛出一个EOFException异常(IOException子类)
+```java
+throw EOFException();
+```
+别忘记在方法首部声明抛出的异常
+
+## 自定义异常
+继承Exception 或　Exception子类  
+一般异常有两个构造函数：
+
+1. 一个无参构造器
+2. 一个记录详细描述信息(超类Throwable.toString可以打印这些信息)
+
+如：
+```java
+public MyExcpetion extends IOexception{
+    public MyExcpetion(){}
+    public MyExcpetion(String message){
+        super(message)
+    }
+}
+```
+
+## 捕获异常
+使用try/catch 块
+```java
+try{
+    more code
+}
+catch ( ExceptionType e )
+{
+    handler for this type
+}
+```
+
+如果子类覆盖了父类的方法，但父类没有声明任何异常抛出，那么子类必须捕获每一个抛出的受查异常（父类方法没抛出异常，子类也不能抛出异常）
+
+**捕获多个异常**  
+
+```java
+try{
+    ...
+}
+catch ( FileNotFoundException e ){
+    ...
+}
+catch ( UnknownHostException e ){
+    ...
+}
+catch ( IOException e ){
+    ...
+}
+```
+
+**合并catch**  
+如果两个或多个异常的处理动作相同的情况下使用
+```java
+try{
+    ...
+}
+catch ( FileNotFoundException | nknownHostException e ){    
+    ...
+}
+```
+>注：  
+>捕获多个异常时, 异常变量隐含为 final 变量。即不能为e赋值不同的值
+
+## 再次抛出异常与异常链
+在catch中抛出异常,目的是为了改变异常类型  
+方式一：
+```java
+try{
+access the database
+}
+catch ( SQLException e ){
+    throw new ServletException (" database error: " + e.getMessage());
+}
+```
+方式二：更好的处理，并将原始异常设置成新异常的原因（推荐）  
+Throwable.initCause(Throwable cause) : 将Throwable的cause初始化为指定的值（不能是它本身）
+Throwable.getCause():获取cause值
+```java
+try{
+    ...
+}
+catch ( SQLException e ){
+    Throwable se = new ServletException("database error");
+    // 	Throwable.initCause(Throwable cause) 
+    se.initCause(e);
+    throw se;
+}
+
+// 获取原始异常Throwable.getCause() 
+Throwabl e = se.getCasue();
+```
+## finally子句
+可以这样使用,有异常抛出就直接执行finally中的语句
+```java
+try{
+
+}finally{
+
+}
+```
+
+**建议解耦try/catch和try/finally**  
+如下：
+```java
+InputStrean in = ...;
+try{
+    try{
+        ...
+    }finally{
+        in.closed();
+    }
+}catch(IOExcpetion o){
+    ...
+}
+```
+好处：  
+1. 内层try/finally只有一个职责，确保关闭流
+2. 外层try/catch也只有一个职责，报告异常
+3. 这样设计不仅清楚，还能报告finally中的异常
+
+**finally与return**    
+
+finally 中包含return,会覆盖原始方法中的return值  
+如,执行ｆ(2),将会返回０
+```java
+public static int f (int n ){
+    try{
+        int r = n * n;
+        return r;
+    }finally{
+        if ( n == 2) return 0 ;
+     }
+}
+```
+
+**finally抛出异常带来的麻烦**  
+如,假设在try中抛出了一些非IOException, 而finally中的closed()方法也有可能抛出异常，这时，原始异常丢失，抛出closed方法的异常
+```java
+ try{
+        ...
+}finally{
+        in.closed();
+}
+```
+解决也十分繁琐
+```java
+InputStream in = ...;
+Exception ex = null ;
+try{
+    try{
+        code that might throw exceptions
+    }catch (Exception e){
+        ex = e;
+        throw e;
+    }
+}finally{
+    try{
+        in.closed();
+    }catch(Exception e){
+        if(ex == null) throw e;
+    }
+}
+```
+
+更好的解决办法:  
+Java SE 7 新增的资源关闭处理.
+
+## 带资源的try语句
+try-with-resource最简形式：
+```java
+try (Resource res = ...；Ｒesource res2 = ...){
+    ...
+}
+```
+当try块退出时，自动执行res.closed()。  
+对于colosed()可能抛出的异常，原来的异常抛出，而closed()异常会被自动捕获,并由Throwable.addSuppressed()添加到原来的异常中。可以使用ThrowablegetSuppressed()获取。
+
+## 分析堆栈轨迹元素
+堆栈轨迹 ( stack trace ) 是一个方法调用过程的列表 , 它包含了程序执行过程中方法调用的特定位置  
+调用 Throwable 类的 printStackTrace 方法访问堆栈轨迹的文本描述信息
+一种更灵活的方法是使用 getStackTrace 方法 , 它会得到 StackTraceElement 对象的一个数组 , 可以在你的程序中分析这个对象数组 。
+
+StackTraceElement 类含有能够获得文件名和当前执行的代码行号的方法 ,
+N 时 , 还含有
+能够获得类名和方法名的方法 。
+
+静态的 Thread . getAllStackTrace 方法 , 它可以产生所有线程的堆栈轨迹
+.
+
+## 使用异常机制技巧
+1. 异常处理不能代替简单的测试
+2. 不要过分地细化异常
+3. 利用异常层次结构  
+    不要只抛出 RuntimeException 异常 。 应该寻找更加适当的子类或创建自己的异常类 。  
+    不要只捕获 Thowable 异常
+4. 不要压制异常
+5. 在检测错误时, “ 苛刻 ” 要比放任更好  
+    在用无效的参数调用一个方法时 , 返回一个虚拟的数值, 还是抛出一个异常 , 哪种处理方式更好  
+    如,当栈空时, Stack.pop() 是返回一个 null , 还是抛出一个异常?  
+    在出错的地方抛出一个 EmptyStackException异常要比在后面抛出一g个NullPointerException 异常更好
+6. 不要羞于传递异常
