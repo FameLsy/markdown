@@ -725,7 +725,82 @@ aFiled.set(maosrl, "newName");
 
 ![反射3](https://raw.githubusercontent.com/FameLsy/Images/master/javase/反射3.png)
 
+## 使用反射编写泛型数组代码
 
+如何自己编写一个通用数组拷贝的的方法呢？
+```java
+ /**
+     * 数组拷贝
+     * 主要为题：如要拷贝一个Employee数组，在执行玩方法后返回的是Object，需要能够成功强转
+     *
+     * 1. 解决的关键为Array.wInstance(Class<?> componentType, int length),它可以创建一个新的指定数组元素类型的数组
+     * 2. 获取数组元素类型：Class.getComponentType(),该方法可以获取到数组类的元素类型
+     * 3. 复制数组：System.arraycopy(Object src, int srcPos, Object dest, int destPos,int length)
+     *      Object src：需要复制的源数组
+     *      int srcPos：源数组复制起始位置
+     *      Object dest：复制的目标数组
+     *      int destPos：复制的目标数组的起始位置
+     *      int length: 复制长度
+     *
+     * @param obj
+     * @param newLength
+     * @return
+     */
+    public static Object goodCopyOf(Object obj, int newLength){
+        Class<?> aClass = obj.getClass();
+        if (!aClass.isArray()) return null;
+        Class<?> componentType = aClass.getComponentType();
+        int length = Array.getLength(aClass);
+        Object newArray = Array.newInstance(componentType, newLength);
+        System.arraycopy(obj, 0, newArray, 0, Math.min(newLength, length));
+        return newArray;
+    }
+```
+
+以下是Arrays.copyOf()的方法  
+> 1. copyOf()两个参数的方法调用了三个参数的方法，把原始的数组类传了进去。  
+> 2. 通过三元运算符判断原始数据是否属于Object[]数组  
+>       是Object就直接new Object[]  
+>       否则需要调用Array.newInstance方法来创建新数组
+```java
+    public static <T> T[] copyOf(T[] original, int newLength) {
+        return (T[]) copyOf(original, newLength, original.getClass());
+    }
+    
+    public static <T,U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType) {
+        @SuppressWarnings("unchecked")
+        T[] copy = ((Object)newType == (Object)Object[].class)
+            ? (T[]) new Object[newLength]
+            : (T[]) Array.newInstance(newType.getComponentType(), newLength);
+        System.arraycopy(original, 0, copy, 0,
+                         Math.min(original.length, newLength));
+        return copy;
+    }
+```
+
+![Array3](https://raw.githubusercontent.com/FameLsy/Images/master/javase/Array3.png)
+
+## 调用任意方法
+Java是没有方法指针的，即将一个方法的存储地址传给另一个方法，以便第二个方法能够调用它。
+
+通过 Class.pgetMethod(String name, Class<?>... parameterTypes)来获取Method，需要提供方法的参数类。
+
+**调用方法**：  
+1. 使用Method.invoke(Object obj, Object... args)进行调用  
+ 第一个obj为隐式参数(静态方法就传null,有点类似于feild.get()方法)  
+ 第二个数组对象为显示参数（在JavaSE 5.0以前必须传递，没有显示参数就传0）  
+
+2. 因为其返回类型为Object，所以需要进行相应的类型转换  
+3. 如果返回值是基本数据类型，会自动包装
+```java
+    public static void main(String[] args) throws Exception {
+        Employee maosrl = new Employee("maosrl", 1000);
+        Method toString = Employee.class.getMethod("toString");
+        System.out.println((String)toString.invoke(maosrl));
+    }
+```
+
+![Method](https://raw.githubusercontent.com/FameLsy/Images/master/javase/Method.png)
 # 继承的设计技巧
 
 1. 将公共操作和域放在超类
