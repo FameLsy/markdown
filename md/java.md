@@ -693,7 +693,37 @@ Modifier类可以通过返回的整数数值，进行相关判断。
 
 ## 在运行时使用反射分析对象
 
+查看数据域的实际内容：  
+其中，Object obj 是一个包含该域的对象。
+```java
+Field.get(Object obj)
+```
+实例:  
+```java
+Employee maorl = new Employee("maorl", 39999, 10, 1, 1994);
+Class aClass = maorl.getClass();
+// name域是Employee的一个私有域
+Field aField = aClass.getDeclareField("name");
+//获取具体值
+Object value = aField.get(masorl);
+```
+在这里，name是一个私有域，因为反射机制的默认是受Java访问控制的，所以get()方法会抛出一个IllegalAccessException。  
+如果一个Java程序没有受到安全管理器的控制，就可以覆盖访问控制。为了达到这个目的，可以使用Field、Method、Constructor对象的 *setAccessible*
+```java
+aFiled.setAcessible(true)
+```
+此时，我们可以访问得到name域的值了。  
 
+**get()自动打包**  
+对于get()方法如果域是一个String,那么返回成Object是没有问题的。但如果是一个基本数据类型，get()方法会自动将值打包成对象。
+
+**设置域**  
+get()方法用来获取域的值，那么对应的，set(Obj, value)方法用来设置域值
+```java
+aFiled.set(maosrl, "newName");
+```
+
+![反射3](https://raw.githubusercontent.com/FameLsy/Images/master/javase/反射3.png)
 # 继承的设计技巧
 
 1. 将公共操作和域放在超类
