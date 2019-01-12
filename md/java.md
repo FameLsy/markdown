@@ -1201,16 +1201,68 @@ try (Resource res = ...；Ｒesource res2 = ...){
 对于colosed()可能抛出的异常，原来的异常抛出，而closed()异常会被自动捕获,并由Throwable.addSuppressed()添加到原来的异常中。可以使用ThrowablegetSuppressed()获取。
 
 ## 分析堆栈轨迹元素
-堆栈轨迹 ( stack trace ) 是一个方法调用过程的列表 , 它包含了程序执行过程中方法调用的特定位置  
-调用 Throwable 类的 printStackTrace 方法访问堆栈轨迹的文本描述信息
-一种更灵活的方法是使用 getStackTrace 方法 , 它会得到 StackTraceElement 对象的一个数组 , 可以在你的程序中分析这个对象数组 。
+堆栈轨迹 ( stack trace ) 是一个方法调用过程的列表 , 它包含了程序执行过程中方法调用的特定位置，在java正常终止，无捕获异常时显示该列表。
 
-StackTraceElement 类含有能够获得文件名和当前执行的代码行号的方法 ,
-N 时 , 还含有
-能够获得类名和方法名的方法 。
+对于获取堆栈信息有以下几种方法：
 
-静态的 Thread . getAllStackTrace 方法 , 它可以产生所有线程的堆栈轨迹
-.
+1. Throwable.printStackTrace()方法
+2. Throwable.getStackTrace()方法
+3. 静态Tread.getAllStackTrace()方法（产生所有线程的堆栈轨迹）
+
+如下是打印递归函数facorial的堆栈情况
+```java
+import java.util.Scanner;
+
+public class StackTrace {
+    /**
+     * 使用了throwable.getStackTrace()来获取StackTraceElement数组
+     * StackTraceElement 类含有能够获取文件名，和当前执行代码号的方法，同时还有获取类名和方法名的方法
+     * 本例如果输入n=3时，输出结果如下;
+     * ---------------------------
+     * factorial(3):
+     * StackTrace.facorial(StackTrace.java:14)
+     * StackTrace.main(StackTrace.java:30)
+     * factorial(2):
+     * StackTrace.facorial(StackTrace.java:14)
+     * StackTrace.facorial(StackTrace.java:21)
+     * StackTrace.main(StackTrace.java:30)
+     * factorial(1):
+     * StackTrace.facorial(StackTrace.java:14)
+     * StackTrace.facorial(StackTrace.java:21)
+     * StackTrace.facorial(StackTrace.java:21)
+     * StackTrace.main(StackTrace.java:30)
+     * return1
+     * return2
+     * return6
+     * -----------------------------
+     * @param n
+     * @return
+     */
+    public static int facorial(int n){
+        System.out.println("factorial(" + n + "):");
+        Throwable throwable = new Throwable();
+        StackTraceElement[] stackTraces = throwable.getStackTrace();
+        for (StackTraceElement stackTraceElement : stackTraces){
+            System.out.println(stackTraceElement);
+        }
+        int result;
+        if (n <= 1) result = 1;
+        else result = n * facorial(n-1);
+        System.out.println("return" + result);
+        return result;
+    }
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        System.out.println("Enter n: ");
+        int n = in.nextInt();
+        facorial(n);
+    }
+}
+```
+![throwable1](https://raw.githubusercontent.com/FameLsy/Images/master/javase/throwable1.png)
+![throwable2](https://raw.githubusercontent.com/FameLsy/Images/master/javase/throwable2.png)
+![Exception](https://raw.githubusercontent.com/FameLsy/Images/master/javase/Exception.png)
 
 ## 使用异常机制技巧
 1. 异常处理不能代替简单的测试
@@ -1224,3 +1276,65 @@ N 时 , 还含有
     如,当栈空时, Stack.pop() 是返回一个 null , 还是抛出一个异常?  
     在出错的地方抛出一个 EmptyStackException异常要比在后面抛出一g个NullPointerException 异常更好
 6. 不要羞于传递异常
+
+# 断言(可以使用Junit代替)
+
+
+断言机制：在测试期间向代码插入一些检查语句，当代码发布时，检查语句会被移走  
+两种断言的形式：
+
+1. assert 条件;
+2. assert 条件 : 表达式;
+
+两种形式均会对条件进行检测，如果为false,抛出AssertionError异常。对于形式2，表达式会传入AssertionError构造器，并转换成一个消息字符串。
+
+> 注：  
+>表达式唯一目的就是产生一个消息字符串  
+>AssertionError对象并不存储表达式的值
+
+## 启用禁用断言
+默认情况下，断言是被禁用的。  
+>注:  
+> 启用或禁用断言无需重新编译程序  
+> 启用或禁用断言属于类加载器的功能  
+> 断言禁用，类加载器直接跳过断言代码  
+
+
+启用断言：
+```java
+java -enableassertions MyApp
+//或
+jvava -ea : MyApp
+```
+在某个类或整个包中使用断言:
+```java
+java -ea: MyClass -ea : com.mycompan.mylib
+```
+
+禁用断言
+```java
+java -disableassertions MyClass
+//或
+java -da : MyClass
+```
+
+需要应用到系统类的断言启用
+```java
+java -enablesystemassertions Myclass
+//或
+java -esa : Myclass
+```
+
+## 使用断言完成参数检查
+
+java语言中的3种处理系统错误机制：
+1. 抛出一个异常
+2. 日志
+3. 使用断言
+
+断言使用情况：
+1. 断言失败是致命的，不可恢复的错误
+2. 断言检查只用于开发和检测阶段
+
+# 记录日志（Log4j）
+
