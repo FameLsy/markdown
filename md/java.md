@@ -1338,3 +1338,250 @@ java语言中的3种处理系统错误机制：
 
 # 记录日志（Log4j）
 
+# 泛型程序
+
+## 泛型类
+类型变量使用大写形式，在Java中
+1. E表示集合的元素类型
+2. K和V表示关键字与值类型
+3. T(需要时还可以使用临近字母U,S)表示任意类型
+```java
+public class MyCLass<T,U>{
+    ...
+}
+```
+
+## 泛型方法
+类型变量放在修饰符后面，返回值前面
+```java
+    public static <T> T get(T... a){
+        ...
+    }
+```
+泛型方法可以定义在普通类中，也可以定义在泛型类中
+
+注意以下的不同  
+这是另一种包含类型变量的写法
+```java
+public T get(T... a(){
+
+}
+```
+两种写法的区别在于
+>对于<T> T,可以在调用方法时指定Ｔ的类型，如MyClass.<String> get()，获取的返回值就是String类  
+> 而对于T,只能使用普通的MyClass.get(),至于返回值类型，会根据ＭyClass<T>类型变量决定。
+
+
+　　
+**调用泛型方法**  
+在方法名前的尖括号中放入具体类
+```java
+MyClass.<String>get("a", "b", "c");
+//或,返回值根据类型自动选择
+MyClass.get("a", "b", "c");
+
+```
+
+**泛型方法可能出错**  
+如下，编译器会自动打包一个Double类和两个Integer类，而后寻找他们的共同超类。  
+事实上会找到Number和Comparable接口，其本身也是个泛型类。  
+这样会导致解释代码有两种方法，且都合法。
+```java
+MyClass.method(3.14, 2, 1);
+```
+
+## 　类型变量限定
+
+如下，Ｔ可以是任意类型
+```java
+public static <T> T min(T[] a){
+    ...
+}
+```
+但如果我们需要限制Ｔ必须实现Comparable接口
+```java
+public static <T extends Comparable> T min(T[] a){
+    ...
+}
+```
+>注：  
+>可以看到，在上面例子中实现接口用的是extends而不是implements  
+>原因：其实< T extends Compatable >应该是< T extends BoundingType >,即代表的含义是Ｔ是 BoundingType的子类型。而不是Ｔ继承或实现BoundingType。（Java设计者不打算添加新的关键字，而extends更接近子类的意思）
+
+**多个限定**　　
+使用 *&* 来分隔限定类型,使用 "," 来分隔类型变量
+```java
+<T extends Comparable & Serializable, U>
+```
+
+## 泛型与虚拟机
+首先要知道，虚拟机只有普通类，没有泛型类这个概念。也就是说，泛型类最终还是会被解析成普通类
+
+### 类型擦除  
+泛型类都会被提供一个原始类型。  
+如，没有限定类型的泛型类替换方式
+```java
+public class Pair<T>{
+    private T first;
+    ...
+}
+//类型擦除后,T没有限定类型，会被替换成 Object
+public class pair{
+    private Object first;
+    ....
+}
+```
+如果是有限定类型的话
+```java
+public class pair<T  extends Comparable & Serializable>{
+    private T first;
+    ...
+} 
+//擦除后,会替换为第一个限定类型
+public class pair{
+    private Comparable first;
+    ....
+}
+//如果是 <T  extends  Serializable& Comparable>
+public class pair{
+    private Serializable first;
+    ....
+}
+```
+如上代码所示，T会替换为第一个限定类型，而编译器在必要时会向另一个限定类型插入强制类型转换。  
+所以，为了提高效率，一般把标签接口(即没有方法的接口)放在末尾
+
+
+## 翻译泛型方法
+```java
+public static <T extends Comparable 〉 T min ( T[] a )
+//擦除类型后
+public static Comparable min(Comparable a)
+```
+
+## 翻译泛型表达式
+
+假设有如下泛型类
+
+```java
+public class Pair<T>{
+    private T first;
+    public  Pair(T first){
+        this.first = first;
+    }
+    public <T> T getFirst(){return first}
+}
+```
+
+如我们调用如下方法
+```java
+Pair<Employee> buddies = ...;
+Employee buddy = buddies.getFirst();
+``` 
+编译器会把这个方法翻译为两条虚拟机指令
+1. 第一步：对原始getFirst()的调用((T 擦除后替换成Object，方法返回Object))
+2. 第二步：将Object强制转换为Employee
+
+相当于变为原始的方法，再对泛型部分进行强转
+
+即geteFirst方法会变成
+```
+public Employee getFirst(){
+    return (Employee)first;
+}
+```
+
+如果是setFirst方法的话会变成
+```java
+public void setFirst(Object first){
+    this.first = (Employe)first;
+}
+```
+
+所以在本质上可以说，泛型是将各种类型变量还原成原始数据，在强转。  
+如下例子,虽然不是很好的编程风格，但也是进行了强制转换
+```java
+Pair<Employee> buddies = ...;
+Employee buddy = buddies.first;
+```
+
+## 方法擦除带来的问题1：擦除与多态冲突
+```java
+class ChildClass extends ParentClass<LocalDate>{
+    private LocalDate second;`
+    public void setSecond(LocalDate second){
+        ....
+    }
+}
+
+class ParentClass <T>{
+    public void setSecond(T second){
+        ...
+    }
+}
+```
+
+执行以下代码
+```java
+ChildClass aChild = new ChildClass();
+ParentClass<LocalDate> aParent = aChild; //多态
+aParent.setSecond(aLocalDate);
+```
+
+按照泛型的特点,擦除后
+
+```java
+class ChildClass extends ParentClass{
+    public void setSecond(LocalDate second){
+        ....
+    }
+}
+
+class ParentClass{
+    public void setSecond(Object second){
+        ...
+    }
+}
+
+```
+此时可以看到，有两个不同的setSecond()方法 ,而不是完成子类方法覆盖父类方法(很显然，擦除带来的效果与多态的冲突)  
+
+泛型是如何解决多态？  
+答：编译器会在ChildClass自动生成一个桥方法，达到类似于多态的效果。  
+桥方法类似于：
+```java
+public void setSecond(Object second){
+    setSecond((LocalDate)second)
+}
+```
+
+同理，如果有如下代码
+```java
+class ChildClass extends ParentClass<LocalDate>{
+    public LocalDate getSecond(){
+        ....
+    }
+}
+
+class ParentClass <T>{
+    public <T> T getSecond(){
+        ...
+    }
+}
+```
+擦除后ＣhildClass会有两个getSecond()方法
+```java
+class ChildClass extends ParentClass{
+    // 自己定义的
+    public LocalDate getSecond(){
+        ....
+    }
+    //桥方法
+    public Object getSecond(){
+        ...
+    }
+}
+```
+
+没错，是真的有两个getSecond方法，在java中可能不合法，在虚拟机中是合法的。
+
