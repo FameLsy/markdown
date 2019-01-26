@@ -347,3 +347,52 @@ StringBuilder可以解决这个问题。
 用于基本整型和浮点数精度无法满足需求。java.math提供了 *BigInteger*和 *bigDeciaml* 类，这两个类可以实现任意精度的浮点数运算。  
 缺点是无法使用基本的算术运算符(+、-等)
 
+
+# 对象包装器和自动装箱
+基本类型对应的类，被成为包装器。
+
+
+|包装器|原始|
+|--|--|
+|Integer|int|
+|Long|long|
+|Float|float|
+|Double|double|
+|Short|short|
+|Byte|byte|
+|Character|char|
+|Void|void|
+|Boolean|boolean|
+
+前六个包装器继承于Number类。  
+使用：  
+```java
+ArrayList<Integer>//不能携程ArrayList<int>
+```
+>注：  
+>装箱和拆箱是编译器认可的，而不是虚拟机（编译器在生成类的字节码的时候，插入必要的方法调用，而虚拟机这是执行这些字节码）
+
+## 自动装箱
+将基本数据赋值给包装器
+```java
+list.add(3);
+//自动装箱成
+list.add(Integer.valueOf(3));
+```
+ ## 自动拆箱
+ 将包装器对象赋值给基本数据
+ ```java
+ int n = list.get(i);
+ //自动拆箱
+ int n = list.get(i).intValue();
+ ```
+
+ ![Integer](https://raw.githubusercontent.com/FameLsy/Images/master/javase/Integer.png)
+
+## 混用Integer和Double
+Integer会先自动拆箱，提升为Double，在装箱成Double
+```java
+Integer n = 1;
+Double x = 2.0;
+System.out.println(true ? n : x);
+```

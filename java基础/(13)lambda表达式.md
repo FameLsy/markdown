@@ -1,7 +1,7 @@
 ---
-title: java基础5：lambda表达式
+title: java基础(13)：lambda表达式
 tgas: 
-- java基础
+- lambda表达式
 categories: 
 - JavaSe教程
 ---

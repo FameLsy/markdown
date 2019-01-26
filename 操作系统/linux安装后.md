@@ -42,7 +42,7 @@ sudo chmod +x VMware-Workstation-Full-14.1.2-8497320.x86_64.bundle
 ```linux
 sudo ./VMware-Workstation-Full-14.1.2-8497320.x86_64.bundle
 ```
-激活码
+激活码  
 *VF19H-8YY5L-48DQY-JEWNG-YPKF6*  
 *FF31K-AHZD1-H8ETZ-8WWEZ-WUUVA*  
 *CV7T2-6WY5Q-48EWP-ZXY7X-QGUWD*  
@@ -52,6 +52,10 @@ sudo ./VMware-Workstation-Full-14.1.2-8497320.x86_64.bundle
 sudo apt-get  install  build-essential
 ```
 
+卸载
+```
+sudo vmware-installer -u vmware-workstation
+```
 
 
 # Idea
