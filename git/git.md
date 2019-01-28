@@ -332,12 +332,24 @@ git log --pretty=format:"%h - %an, %ar : %s"
 ```
 git log --since=2.weeks
 ```
-## 撤销操作
+
+## 图形化方式查看git提交
+```
+#当前分支
+gitk 
+#所有分支
+gitk --all
+```
+
+## 变更操作
+
 **重新提交**  
-实为再次提交暂存区的文件，并重写覆盖上一次的提交信息
+实为再次提交暂存区的文件，并重写覆盖上一次的提交信息(commit对象会变)
 ```git
 git commit --amend
 ```
+如果要更改老旧commit的提交信息，请看变基操作
+
 **取消暂存的文件**  
 ```git
 git reset HEAD <file-name>
@@ -607,9 +619,42 @@ git remote show origin
 1. 从一个远程跟踪分支检出一个本地分支会自动创建一个叫做 “跟踪分支”（有时候也叫做 “上游分支”）。 
 2. 跟踪分支是与远程分支有直接关系的本地分支。 
 3. 如果在一个跟踪分支上输入 *git pull*，Git 能自动地识别去哪个服务器上抓取、合并到哪个分支。
-## 变基
-在 Git 中整合来自不同分支的修改主要有两种方法：merge 以及 rebase
 
+
+## 变基
+```
+git rebase -i 提交的hashcode
+```
+
+在编辑之后，会弹出一个文本,里面告诉你该如何用命令
+```
+pick 5e358bb [添加]添加了MyBaits相关笔记
+pick 9c77fd9 [.]
+
+# Commands:
+# p, pick <commit> = use commit
+# r, reword <commit> = use commit, but edit the commit message
+# e, edit <commit> = use commit, but stop for amending
+# s, squash <commit> = use commit, but meld into previous commit
+# f, fixup <commit> = like "squash", but discard this commit's log message
+# x, exec <command> = run command (the rest of the line) using shell
+# b, break = stop here (continue rebase later with 'git rebase --continue')
+# d, drop <commit> = remove commit
+# l, label <label> = label current HEAD with a name
+# t, reset <label> = reset HEAD to a label
+# m, merge [-C <commit> | -c <commit>] <label> [# <oneline>]
+# .       create a merge commit using the original merge commit's
+# .       message (or the oneline, if no original merge commit was
+# .       specified). Use -c <commit> to reword the commit message.
+```
+
+想要修改提交信息，就使用r这个命令
+```
+pick 5e358bb [添加]添加了MyBaits相关笔记
+pick 9c77fd9 [.]
+# 修改5e358bb的提交信息
+r 5e358bb [添加]添加了MyBaits相关笔记
+```
 
 # 服务器上的Git
 **裸仓库（bare repository）**  
