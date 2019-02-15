@@ -217,7 +217,7 @@ git commit -a
 ## 移除文件
 **删除跟踪状态，且同时删除工作区的的文件（未暂存）。**
 ```git
-git rm file
+git rm < file-name>
 ```
 **强制删除已暂存的文件**
 ```git
@@ -371,6 +371,7 @@ git checkout -- <file-name>
 ```
 
 **恢复到某个commit**
+恢复后暂存区、工作区都会变化，然后之后的commit全部丢失，very 恐怖
 ```
 git reset --hard hashcode
 ```
@@ -580,7 +581,10 @@ git branch
 ```
 **要查看每一个分支的最后一次提交**
 ```
+# 查看当前分支的最后一次提交
 git branch -v
+# 查看所有分支的最后一次提交
+git branch -av
 ```
 **查看哪些分支已经合并/未合并到当前分支**
 ```
@@ -589,6 +593,15 @@ git branch --merged
 #未合并的分支
 git branch --no-merged 
 ```
+
+**比较两个分支不同**
+```
+# 比较两个不同分支的所有文件
+git diff < branch1> <branch2>
+# 比较两个不同分支指定文件
+git diff < branch1> <branch2> -- < file-name >
+```
+
 ## 合并分支
 **合并分支** : *git merge < branch-name >*
 ```
@@ -764,3 +777,24 @@ ssh-keygen
 ```
 以 *.pub* 为扩展名则为公钥，另一个则为私钥。
 
+# 紧急任务加塞
+
+当在开发过程中，需要处理其他紧急任务，可使用
+```
+git stash 
+```
+这样将当前状态保存到一个堆栈中,查看堆栈如下
+```
+git stash list
+# 显示stash@{2}: WIP on master: 0cb0a4b [修改]
+```
+任务完成后，可以使用如下命令继续刚才停止的任务
+```
+# 弹出最顶的stash，但不删除
+git stash apply
+# 弹出最顶的stash，但删除
+git stash pop
+# 弹出制定的某个栈值，上面两个相当于stash@{0}
+git stash apply/pop stash@{n}
+
+```
