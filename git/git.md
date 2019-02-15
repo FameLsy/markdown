@@ -150,17 +150,20 @@ git add /home/git/
 2. 将路径下所有文件递归设置成跟踪状态，并放入暂存区
 3. 对于已经是跟踪状态的已经修改文件，放入暂存区  
 
-**查看尚未暂存的文件更新**  
+**查看未暂存的文件与暂存区比较**  
 ```git
 git diff
+#只查看某个文件
+git diff -- 文件1 文件2
 ```
-**查看已暂存的将要添加到下次提交里的内容**
+**暂存区与上一次提交(HEAD指向)比较**
 ```git
 git diff --cached
 #或者，git16.1版本后适用
 git diff --staged
 ```
 注意，*git diff*比较的是工作目录文件的内容和暂存区文件的内容。
+
 ## 忽略文件
 如日志文件之类的文件，无需纳入git管理。这种情况下，创建一个名为  *.gitignore* 的文件,列出要忽略的文件模式.
 ```
@@ -355,15 +358,21 @@ git commit --amend
 **整合多个commit提交**
 也看变基操作
 
-
 **取消暂存的文件**  
 ```git
+# 取消所有暂存区内容
+git reset HEAD
+# 取消指定文件
 git reset HEAD <file-name>
 ```
-**撤销对文件的修改**  
-该命令会将文件还原成上次提交时的样子
+**从暂存区恢复文件**  
 ```git
 git checkout -- <file-name>
+```
+
+**恢复到某个commit**
+```
+git reset --hard hashcode
 ```
 # 远程仓库的使用
 远程仓库是指托管在因特网或其他网络中的你的项目的版本库。
@@ -663,8 +672,22 @@ r 5e358bb [添加]添加了MyBaits相关笔记
 ```
 
 想要合成多个commit，则要使用s命令
+```
+pick 5e358bb [添加]添加了MyBaits相关笔记
+pick 9c77fd9 [.]
+pick 7gsdh96  [sd]
+pick asdas323 [sd]
+pcik asdsad [22]
+# 合并前4个，则
+pick 5e358bb [添加]添加了MyBaits相关笔记
+s 9c77fd9 [.]
+s 7gsdh96  [sd]
+s asdas323 [sd]
+pcik asdsad [22]
+```
 
-从变基的位置开始，所有的commit对象都改变了其地址。
+
+所有的变基操作，在变基的位置开始，所有的commit对象都改变了其地址。  
 所以，当项目已经push上了，千万别用，在本地用用就可以了。
 
 # 服务器上的Git
