@@ -348,7 +348,13 @@ gitk --all
 ```git
 git commit --amend
 ```
+
+**修改老旧commit**
 如果要更改老旧commit的提交信息，请看变基操作
+
+**整合多个commit提交**
+也看变基操作
+
 
 **取消暂存的文件**  
 ```git
@@ -655,6 +661,11 @@ pick 9c77fd9 [.]
 # 修改5e358bb的提交信息
 r 5e358bb [添加]添加了MyBaits相关笔记
 ```
+
+想要合成多个commit，则要使用s命令
+
+从变基的位置开始，所有的commit对象都改变了其地址。
+所以，当项目已经push上了，千万别用，在本地用用就可以了。
 
 # 服务器上的Git
 **裸仓库（bare repository）**  
