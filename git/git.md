@@ -97,6 +97,8 @@ git init
 git clone https://github.com/demo/demo
 # 自定义本地仓库名字
 git clone https://github.com/demo/demo mydemo
+# 不带工作区
+git clone --bare
 ```
 执行完后有当前目录会有两个文件夹
 1. demo文件夹：项目文件都会在这
@@ -797,4 +799,25 @@ git stash pop
 # 弹出制定的某个栈值，上面两个相当于stash@{0}
 git stash apply/pop stash@{n}
 
+```
+
+# git备份
+常用协议：
+1. 哑协议 /path/to/repo.git(传输进度不可见)
+2. 智能协议 file:///psth/to/repo.git（传输可见，速度比哑协议快）
+3. http/https协议
+4. ssh协议
+
+如果是本地仓库的备份
+```
+# 使用--bare不备份工作区，更干净
+git clone --bare 协议(推荐智能协议)
+```
+
+如果是远程仓库备份
+```
+# 关联原创仓库
+git remote add <remote-name> 协议
+# 然后push
+git push [branch-name]
 ```
