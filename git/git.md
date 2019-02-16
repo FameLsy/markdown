@@ -553,19 +553,25 @@ git branch testing
 
 ## 分支切换
 切换分支其实相当于改变HEAD的指针，同时会改变你工作目录中的文件  
-**切换到分支**： *git checkout < branch-name >*
+
+**切换到分支**
 ```
-git checkout testing
+git checkout < branch-name >
 ```
-**新建分支同时切换到该分支**： *git checkout -b < branch-name >*
+
+**新建分支同时切换到该分支**：
+
 ```
 git checkout -b testing
+# 基于远程分支建立新分支
+git checkout -b <branch-name> <remote-branch-name>
 ```
 相当于执行了如下两条命令
 ```
 git branch testing
 git checkout testing
 ```
+
 ## 查看分支
 **查看各个分支所指的提交对象**  
  提供该功能的选项是 --decorate
@@ -612,8 +618,44 @@ git merge hotfix
 ## 合并冲突
 **遇到冲突时的分支合并**  
 在两个不同的分支中，对同一个文件的同一个部分进行了不同的修改，需要手动去处理冲突。  
-使用 *git status*查看那些因包含合并冲突而处于未合并（unmerged）状态的文件  
+
+**解决内容冲突**
+```
+# 先将远程分支的拉下来合并,合并过程会告知你那个文件合并必败
+git pull 
+# 修改该文件,该文件内容可以看到冲突的地方
+vim README
+# 修改完后再次提交
+git commit -am'解决冲突'
+# 再push
+git push
+```
+**同时修改文件名和文件内容**
+一方变更了文件名  
+另一方变更了文件内容  
+无需解决，git会自动改文件名和文件内容
+
+**解决文件名冲突**  
+
+拉下来后,工作区改名后的两个文件都存在  
+
+解决：
+```
+# 先删除暂存区的原文件
+git rm index.html
+# 把想要保留的加入到暂存区
+git add index1.html
+# 删除另一个
+git rm index2.html
+# 提交
+git commit -am"修改冲突"
+```
+
+
+使用 *git status*查看那些因包含合并冲突而处于未合并（unmerged）状态的文件
+
 解决了所有文件里的冲突之后，对每个文件使用 *git add* 命令来将其标记为冲突已解决  
+
 **使用图形化工具解决冲突**  
 运行图形化工具
 ```
@@ -767,9 +809,12 @@ cd ~/.ssh
 ls
 ```
 如果没有这个目录,或者有目录，但没有*id_dsa*和*id_rsa*文件，说明你没有公钥。  
+
 **创建**  
 ```
 ssh-keygen
+# 官方给的设置方式，管理email
+ssh-keygen -t rsa -b 4096 -C "xx.@xx.com"
 ```
 (创建过程中会让你输入密钥口令，可以直接按空格不输入)  
 现在，在目录下，起码有两个文件存在了
@@ -777,7 +822,7 @@ ssh-keygen
 -rw-------  1 famel famel 1675 12月 17 11:48 id_rsa
 -rw-r--r--  1 famel famel  409 12月 17 11:48 id_rsa.pub
 ```
-以 *.pub* 为扩展名则为公钥，另一个则为私钥。
+以 *.pub* 为扩展名则为公钥，另一个则为私钥。(github上输入公钥)
 
 # 紧急任务加塞
 
@@ -821,3 +866,16 @@ git remote add <remote-name> 协议
 # 然后push
 git push [branch-name]
 ```
+
+# git 18R!(禁止命令)
+
+禁止一：强制更新
+```
+# 如果本地使用了,那么之后的commit就会消失
+git reset --hard <hashcode>
+# 如果使用了强制更新，那么远程仓库也会小时一大堆commit！！！
+git push -f 
+```
+
+禁止二：不要对集成分支变基  
+对公共commit改变后，之后历史的commit全部改变。对于其他人可能还需要一个个对新的commit进行merge等操作。
