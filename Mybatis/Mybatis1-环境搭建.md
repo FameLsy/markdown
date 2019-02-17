@@ -1,5 +1,9 @@
 ---
-title: Mybaits学习(1) 
+title: Mybatis环境搭建
+tags: 
+- Mybatis环境搭建
+categories: 
+- Mybaits
 ---
 
 # 下载MyBatis

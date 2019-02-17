@@ -1,3 +1,10 @@
+---
+title: Mybatis动态sql
+tags: 
+- Mybatis动态sql
+categories: 
+- Mybaits
+---
 Mybaits包含以下几种动态Sql元素
 
 |元素|描述|

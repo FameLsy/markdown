@@ -1,3 +1,10 @@
+---
+title: Mybatis配置
+tags: 
+- Mybatis配置
+categories: 
+- Mybaits
+---
 # 配置文件属性
 configuration 配置  
 |配置|说明|

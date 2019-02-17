@@ -1,3 +1,11 @@
+---
+title: Mybatis基本构成
+tags: 
+- Mybaits基本构成
+categories: 
+- Mybaits
+---
+
 # MyBatis 基本构成
 
 |组件|说明|

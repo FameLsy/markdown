@@ -280,6 +280,9 @@ sudo vim ~/blog/themes/next/source/css/_custom/custom.styl
 **下载next主题**
 ```
  git clone https://github.com/theme-next/hexo-theme-next themes/next
+
+# 站点配置文件
+theme: next
 ```
 **不展开全部内容**  
 主题配置文件搜索关键字*auto_excerpt*,*enable*改为*true*

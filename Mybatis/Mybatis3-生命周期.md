@@ -1,3 +1,10 @@
+---
+title: Mybatis生命周期
+tags: 
+- Mybatis生命周期
+categories: 
+- Mybaits
+---
 正确理解SqlSessionFactoryBuilder、SqlSessionFactory、SqlSession、和Mapper的生命周期
 
 # SqlSessionFactoryBuilder

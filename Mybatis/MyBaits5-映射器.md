@@ -1,3 +1,11 @@
+---
+title: Mybatis映射器
+tags: 
+- Mybatis映射器
+categories: 
+- Mybaits
+---
+
 映射器： 由Java接口和XML文件（或注解）共同组成
 
 映射器作用：
