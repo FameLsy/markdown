@@ -272,7 +272,7 @@ vim ~/blog/themes/next/source/css/_custom/mystyle.styl
 ```
 打开custom.styl文件，并将刚刚创建的.styl文件导入
 ```linux
-#输入@impolt "mystyle.styl"导入
+#输入@import "mystyle.styl"导入
 sudo vim ~/blog/themes/next/source/css/_custom/custom.styl
 ```
 
