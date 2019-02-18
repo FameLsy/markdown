@@ -24,28 +24,6 @@ public class JavaConfig {}
 
 
 
-## 配置文件的加载
-- 方式一：自动加载当前类名+context.xml后缀的配置文件。如CDPlayerContext.xml
-```java
-@ContextConfiguration
-```
-- 方式二：加载配置类
-```java
-@ContextConfiguration(classes = JavaConfig.class)
-```
-- 方式三:加载多个配置类
-```java
-@ContextConfiguration(classes = {JavaConfig.class, JavaConfig2.class})
-```
-- 方式四：加载指定的xml文件
-```java
-@ContextConfiguration(locations=”classpath:xxx.xml”)
-```
-- 方式五：加载多个指定的xml文件
-```java
-@ContextConfiguration(locations={“classpath:xxx.xml” , “classpath:xxx2.xml”})
-```
->注：用idea开发需要把xml文件放到resources中，idea不会读src下的静态资源文件~~~
 
 
 
