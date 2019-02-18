@@ -67,6 +67,7 @@ categories:
 9. delete – 映射删除语句
 10. select – 映射查询语句
 
+
 ## select 元素
 例：
 ```xml
@@ -104,7 +105,7 @@ select 元素具体属性
 ## insert, update 和 delete
 
 数据变更语句 insert，update 和 delete 的实现非常接近：
-
+执行完后会返回一个整数，标出执行后影响的记录条数
 具体属性:
 
 | **属性**                             | **描述**                                                                                                                                                                                                             |
@@ -120,30 +121,21 @@ select 元素具体属性
 | keyColumn                            | （仅对 insert 和 update 有用）通过生成的键值设置表中的列名，这个设置仅在某些数据库（像 PostgreSQL）是必须的，当主键列不是表中的第一列的时候需要设置。如果希望得到多个生成的列，也可以是逗号分隔的属性名称列表。      |
 | databaseId                           | 如果配置了 databaseIdProvider，MyBatis 会加载所有的不带 databaseId 或匹配当前 databaseId 的语句；如果带或者不带的语句都有，则不带的会被忽略。                                                                        |
 
-### 主键自增
-设置 useGeneratedKeys=”true”，然后再把 keyProperty 设置到目标属性上
-```xml
-<insert id="insertAuthor" useGeneratedKeys="true"
-    keyProperty="id">
-  insert into Author (username,password,email,bio)
-  values (#{username},#{password},#{email},#{bio})
-</insert>
-```
+
 ## sql 元素
 这个元素可以被用来定义可重用的 SQL 代码段，可以包含在其他语句中
 
-例
+例，可以用来指定参数
 ```xml
-<sql id="userColumns"> ${alias}.id,${alias}.username,${alias}.password </sql>
-```
-可以使用在其他语句中
-```xml
+<sql id="userColumns"> ${alias}.id,${alias}.username,${alias}.password 
+</sql>
+
 <select id="selectUsers" resultType="map">
   select
-    <include refid="userColumns"><property name="alias" value="t1"/></include>,
-    <include refid="userColumns"><property name="alias" value="t2"/></include>
-  from some_table t1
-    cross join some_table t2
+    <include refid="userColumns">
+        <property name="alias" value="t1"/>
+    </include>
+  from t_role r where role_no = #{roleNo}
 </select>
 ```
 属性值也可以被用在 include 元素的 refid 属性里或 include 内部语句中
@@ -168,13 +160,11 @@ select 元素具体属性
 </select>
 ```
 
-## Result Map
+## resultMap元素
 
-完整的映射文件
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper>
+映射器配置文件中定义
+1. type属性定义JavaBean(可使用别名)
+```
     <resultMap id="" type="">
         <constructor>
             <arg/>
@@ -188,32 +178,26 @@ select 元素具体属性
             <case value=""></case>
         </discriminator>
     </resultMap>
-</mapper>
 ```
 
-### 使用map存储结果集
-```xml
-    <select id="" resultType="map">
-        ....
-    </select> 
-```
+ < Constructor >
+该元素用于配置POJO的构造方法  
 
-### 使用POJO存储结果集
+ < id>
+表示那个列是主键，允许多个（联合主键）
 
-配置< resultmap>
-```xml
-    <resultMap id="demoResult" type="xxx.xxx.Dome">
-        <id property="id" column="id"></id>
-        <result property="roleName" column="role_name"/>
-    </resultMap>
-```
-使用定义好的map
+ < reslut>
+配置POJI到SQL列名的映射关系
 
-```xml
-    <select id="" resultType="demoResult">
-        ....
-    </select> 
-```
+ < id> & < result> 元素属性
+
+|元素名称|说明|
+|--|--|
+|property|映射到列结果的字段或属性|
+|column|SQL列|
+|javaType|配置java类型|
+|jdbcType|配置数据库类型|
+|typeHandler|类型处理器|
 
 ### 级联
 
@@ -224,11 +208,97 @@ Mybatis级联分三种
 
 对应3个标签
 
+## cache 元素
 
-# 参数
 
-对于参数，最简单就时#{id},可能传入一个int类型，当然，也可以传入javabean
 
+
+
+
+# 传递多个参数
+
+对于参数，最简单就是传递一个参数,可能传入一个int类型，当然，也可以传入javabean
+
+对于多个参数，有几种方式
+1.  使用Map进行传递(弊端，可读性不强,不推荐用)
+2. 注解方式传递(参数少时使用)
+3. 使用JavaBean传递参数（参数多于5个使用）
+
+##  使用Map传递参数
+```
+<select parmeterType="map">
+```
+
+接口
+```
+List<Role> findRoleByMap(Map<String, String> params);
+```
+
+参数传递
+```java
+Map<String, String> paramsMap = new HashMap<String, String>();
+paramsMap.put("roleName", "me");
+paramsMap.put("note", "te");
+
+// 使用
+roleMapper.findRoleByMap(paramsMap);
+```
+
+## 使用注解方式传递参数
+接口改动如下,使用@Param("name")
+```java
+public List<Role> findRoleByAnnotation(@Param("roleName") String rolename, @Param("bote") String note)
+```
+XML无需再定义paramtertype  
+
+#{name} 对应@Param("name")的参数
+
+## 使用JavaBean提供参数
+
+如定义一个JavaBean：Role
+
+```xml
+<select parameterType="Role">
+```
+
+接口
+
+```
+public List<Role> findRoleByParams(Role role);
+```
+
+会通过Role中的getter和setter方式传递参数
+
+
+
+
+# 自动映射
+## 自动映射设置
+autoMapping Behavior可以设置成
+1. NONE,取消自动映射
+2. PARTIAL,默认，自动映射，没有定义嵌套结果集映射的结果集
+3. FULL,自动映射任意复杂的结果集
+```
+    <settings>
+        <setting name="autoMappingBehavior" value=""/>
+    </settings>
+```
+
+只要列名与对应的POJO属性对应，即可自动映射
+```
+#对于role_name可以采用别名方式来映射
+SELECT id, role_name as roleName...
+```
+此外，如果数据库规范命名，即
+1. 数据库每一个单词用下划线分隔
+2. POJO蚕蛹驼峰式命名
+
+那么，可以设置mapUnderscoreToCamelCase=true,这样可以省略别名。
+# SQL语句中的参数配置
+SQL语句中，最简单的获取参数方式
+```
+#{name}
+```
 当然也可以指定参数类型，以确定用哪个TypeHandler
 ```xml
 #{property,javaType=int,jdbcType=NUMERIC}
@@ -242,7 +312,7 @@ Mybatis级联分三种
 #{height,javaType=double,jdbcType=NUMERIC,numericScale=2}
 ```
 
-## 存储过程的支持
+# 存储过程的支持
 
 通过mode属性来确定存储过程的参数:IN、OUT、INOUT  
 
@@ -256,9 +326,9 @@ MyBatis 也支持很多高级的数据类型，比如结构体，但是当注册
 #{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE, resultMap=departmentResultMap}
 ```
 
-## 字符串替换
+# 字符串替换
 
 #{}: 会创建预编译语句，然后赋值  
 
-${}:不转义的字符串
+${}: 不转义的字符串
 

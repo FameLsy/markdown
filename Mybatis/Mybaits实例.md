@@ -230,3 +230,161 @@ public class Chapter2Main {
     }
 }
 ```
+
+# 属性Properties参数传入
+1. build()方法传入配置信息和属性对象
+2. 使用aProperties.setProperty()方法来传递参数
+```java
+public class SqlSessionFactoryUtil {
+//    SqlSessionFactory 对象
+    private static SqlSessionFactory sqlSessionFactory = null;
+//    类线程锁
+    private static final Class CLASS_LOCK = SqlSessionFactoryUtil.class;
+
+    /**
+     * 私有化构造函数
+     */
+    private SqlSessionFactoryUtil(){}
+
+    /**
+     * 构建SqlSessionFactory
+     */
+    public static SqlSessionFactory initSqlSessionFactory(){
+        //        配置文件输入流
+        InputStream configurationStream = null;
+        Reader configurationReader = null;
+//        properties文件输入流
+        InputStream propertiesStream = null;
+        Reader propertiesReader = null;
+//        properties文件对象
+        Properties properties = null;
+
+        String resource = "mybatis-config.xml";
+        String jdbcResource = "jdbc.properties";
+        try{
+//          读入配置文件
+            configurationStream = Resources.getResourceAsStream(resource);
+            configurationReader = new InputStreamReader(configurationStream);
+//            读入属性文件
+            propertiesStream = Resources.getResourceAsStream(jdbcResource);
+            propertiesReader = new InputStreamReader(propertiesStream);
+            properties = new Properties();
+            properties.load(propertiesReader);
+//          设置属性
+            properties.setProperty("username", properties.getProperty("username"));
+            properties.setProperty("url", properties.getProperty("url"));
+            properties.setProperty("driver", properties.getProperty("driver"));
+            properties.setProperty("password", properties.getProperty("password"));
+
+        }catch (IOException e){
+//            Logger.getLogger(SqlSessionFactoryUtil.class.getName()).log(Level.SEVERE, null, e);
+        }
+        synchronized (CLASS_LOCK){
+            if (sqlSessionFactory == null) sqlSessionFactory = new SqlSessionFactoryBuilder().build(configurationReader,properties );
+        }
+        return sqlSessionFactory;
+    }
+
+    /**
+     * 打开SqlSession
+     */
+    public static SqlSession openSqlSession(){
+        if (sqlSessionFactory == null) initSqlSessionFactory();
+        return sqlSessionFactory.openSession();
+    }
+```
+
+# 自定义TypeHandler
+
+1 在配置文件中注册TypeHandler
+
+```xml
+    <typeHandlers>
+        <typeHandler handler="com.learn.chapter2.typeHandler.StringTypeHandler" javaType="string" jdbcType="VARCHAR"/>
+    </typeHandlers>
+```
+
+2 编写自己的TypeHandler  
+在这里我定义了一个通过列名获取结果的方法
+
+```java
+public class StringTypeHandler extends BaseTypeHandler<String>{
+    
+    
+    @Override
+    public String getResult(ResultSet rs, String columnName) throws SQLException {
+        System.out.println("自定义的getResult,列名方式获取");
+        return rs.getString(columnName);
+    }
+
+    @Override
+    public void setNonNullParameter(PreparedStatement preparedStatement, int i, String s, JdbcType jdbcType) throws SQLException {
+        
+    }
+
+    @Override
+    public String getNullableResult(ResultSet resultSet, String s) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public String getNullableResult(ResultSet resultSet, int i) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public String getNullableResult(CallableStatement callableStatement, int i) throws SQLException {
+        return null;
+    }
+}
+```
+
+3. 映射器  
+定义一个通过列名获取Role类型的方法
+
+```
+    Role findRole(String roleName);
+```
+4 配置映射配置文件，使用TypeHandler
+1. 配置一个resultMap(返回类型为自定义类型为Role),其中指定了note列必须用我们自定义的处理器
+2. role_name列没有指定，但满足自定义的两种类型
+3. id类完全不相关
+4. select 中设置了resultmap指向我们定义的roleMap
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learn.chapter2.mapper.RoleMapper">
+    <resultMap id="roleMap" type="role">
+        <id column="id" property="id" javaType="long" jdbcType="BIGINT"/>
+        <result column="role_name" property="roleName" jdbcType="VARCHAR" javaType="string"/>
+        <result column="note" property="note" typeHandler="com.learn.chapter2.typeHandler.StringTypeHandler"/>
+    </resultMap>
+
+    <select id="findRole" parameterType="string" resultMap="roleMap">
+        SELECT id, role_name, note FROM t_role
+        WHERE role_name like concat('%', #{rolename} ,'%')
+    </select>
+</mapper>
+```
+
+
+5. 结果
+
+会运行两次，一次指定的，一次根据类型自己寻找
+```
+自定义的getResult,列名方式获取
+自定义的getResult,列名方式获取
+```
+
+# 主键自增
+设置 useGeneratedKeys=”true”，然后再把 keyProperty 设置到目标属性上
+```xml
+<insert id="insertAuthor" useGeneratedKeys="true"
+    keyProperty="id">
+  insert into Author (username,password,email,bio)
+  values (#{username},#{password},#{email},#{bio})
+</insert>
+```

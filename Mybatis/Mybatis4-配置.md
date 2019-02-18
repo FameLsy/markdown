@@ -7,6 +7,7 @@ categories:
 ---
 # 配置文件属性
 configuration 配置  
+
 |配置|说明|
 |--|--|
 |properties| 属性,主要是定义一些字符常量等属性共Mybatis上下文使用|
@@ -17,7 +18,7 @@ configuration 配置
 |plugins |插件|
 |environments |环境|
 |databaseIdProvider |数据库厂商标识|
-mappers |映射器|
+|mappers |映射器|
 
 # properties 属性
 
@@ -56,62 +57,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, props);
 // ... or ...
 
 SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment, props);
-```
 
-实际应用：
-properties需要进行节码后再将properties属性传入
-
-```java
-// 伪代码
-package com.masorl.code3_5;
-
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.Properties;
-
-public class MyBatisDemo {
-    public static void main(String[] args) {
-//        配置文件输入流
-        InputStream configurationStream = null;
-        Reader configurationReader = null;
-//        properties文件输入流
-        InputStream propertiesStream = null;
-        Reader propertiesReader = null;
-//        properties文件对象
-        Properties properties = null;
-
-        try {
-//            读入配置文件
-            configurationStream = Resources.getResourceAsStream("mybatis-config.xml");
-            configurationReader = new InputStreamReader(configurationStream);
-//          读入属性文件
-            propertiesStream = Resources.getResourceAsStream("jdbc.prperties");
-            propertiesReader = new InputStreamReader(propertiesStream);
-            properties = new Properties();
-            properties.load(propertiesReader);
-
-//            解密,假设解密方法为decode();
-//            properties.setProperty("username",
-//                    decode(properties.get("username")));
-//            properties.setProperty("password",
-//                    decode(properties.get("password")));
-        }catch (Exception e){
-
-        }
-//      将配置文件和properties作为参数传入SqlSessionFactoryBuilder.build()方法
-        synchronized (CLASS_LOCK){
-            if (sqlSessionFactory = null){
-                sqlSessionFactory = new SqlSessionFactoryBuilder().build(configurationReader, properties);
-            }
-        }
-
-
-    }
-}
 ```
 
 ## 属性的使用
@@ -226,7 +172,7 @@ public class Author(){...}
 1. 将javaType转换成jdbcType
 2. 将jdbcType转换成javaType
 
-## 加载
+## 注册TypeHandler的方式
 
 指定类型处理器
 ```xml
@@ -297,14 +243,51 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 }
 ```
 
-类型处理器是如何确定java类型的
+### 类型处理器是如何确定java类型的
+
 1. 通过泛型处理器泛型（本例就是这种方式确定Java类型为String)
 2. 在类型处理器的配置元素（typeHandler element）上增加一个 javaType 属性（比如：javaType="String"）；
 3. 在类型处理器的类上（TypeHandler class）增加一个 @MappedTypes 注解来指定与其关联的 Java 类型列表(比如：@MappedTypes{String.class})。 如果在 javaType 属性中也同时指定，则注解方式将被忽略。
 
-类型处理器是如何确定jdbc类型的
-1. 在类型处理器的类上（TypeHandler class）增加一个 @MappedJdbcTypes 注解来指定与其关联的 JDBC 类型列表。 如果在 jdbcType 属性中也同时指定，则注解方式将被忽略。(本例方式)
+通过泛型
+```java
+public class ExampleTypeHandler extends BaseTypeHandler<String>
+```
+
+通过Mybaits配置文件
+```xml
+    <typeHandlers>
+        <typeHandler handler="com.learn.chapter2.typeHandler.StringTypeHandler" javaType="string" jdbcType="VARCHAR"/>
+    </typeHandlers>
+```
+
+通过MappedTypes
+```java
+@MappedTypes({String.class})
+@MappedJdbcTypes(JdbcType.VARCHAR)
+public class StringTypeHandler extends BaseTypeHandler{
+```
+
+### 类型处理器是如何确定jdbc类型的
+
+1. 在类型处理器的类上（TypeHandler class）增加一个 @MappedJdbcTypes 注解来指定与其关联的 JDBC 类型列表。 如果在 jdbcType 属性中也同时指定，则注解方式将被忽略。
 2. 在类型处理器的配置元素上增加一个 jdbcType 属性（比如：jdbcType="VARCHAR"）；
+
+通过MapperTypes
+```java
+@MappedTypes({String.class})
+@MappedJdbcTypes(JdbcType.VARCHAR)
+public class StringTypeHandler extends BaseTypeHandler{
+```
+
+通过配置文件
+```xml
+<typeHandlers>
+  <typeHandler
+  handler="com.learn.chapter2.typeHandler
+  StringTypeHandler" javaType="string" jdbcType="VARCHAR"/>
+</typeHandlers>
+```
 
 ## 自定义泛型处理器
 ```java
@@ -488,6 +471,21 @@ aSqlSession.rollback();
 </databaseIdProvider>
 ```
 
+ type="DB_VENDOR",启动MyBaits内部注册的策略器
+获取数据库ID
+```java
+sqlSessionFactory.getConfigureation().getDatabaseId();
+```
+
+指定SQL语句执行厂商
+```xml
+<select databaseId="mysql">
+```
+有databaseId属性的Mybatis规则
+1. 如果没有配置databaseIdProvider标签，databaseId返回Null
+2. 配置了databaseIdProvider标签，MyBaits会用配置的name去匹配数据库信息，配置成功设置databaseId,否则返回Null
+3. Comfiguration的databaseId不为空，只会找到配置的databaseID的SQL语句
+4. MyBaits加载不带databaseId属性和带有匹配当前数据库databaseId属性的所有语句。同时找到，会舍弃不带databaseId的语句。
 # 映射器 
 
 单独一章

@@ -1,5 +1,6 @@
 ---
 title: java 基础(1):数据类型
+date: 2018-02-02 00:00:01
 tags: 
 - 数据类型
 categories:

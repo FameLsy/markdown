@@ -1,5 +1,6 @@
 ---
 title: java 基础(3):数组
+date: 2018-02-02 00:00:03
 tags: 
 - 数组
 categories:

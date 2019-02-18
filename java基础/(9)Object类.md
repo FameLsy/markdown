@@ -1,5 +1,6 @@
 ---
 title: java 基础(9):Object类
+date: 2018-02-02 00:00:09
 tags: 
 - Object类
 categories:

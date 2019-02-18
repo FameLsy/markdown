@@ -1,5 +1,6 @@
 ---
 title: java基础(13)：lambda表达式
+date: 2018-02-02 00:00:13
 tgas: 
 - lambda表达式
 categories: 
