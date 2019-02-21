@@ -1,8 +1,8 @@
 ---
-title: maven(2) 仓库
-date: 2019-02-21 00:00:02
+title: maven(3) pom
+date: 2019-02-21 00:00:03
 tags: 
-- maven 仓库
+- maven pom
 categories:
 - maven
 ---
