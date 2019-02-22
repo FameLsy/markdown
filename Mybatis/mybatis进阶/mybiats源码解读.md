@@ -8,7 +8,7 @@ categories:
 ---
 
 
-![tomcat](https://raw.githubusercontent.com/FameLsy/Images/master/hexo/tomcat.png)
+
 
 
 # DefaultSqlSessionFactory创建过程

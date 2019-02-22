@@ -7,6 +7,8 @@ categories:
 - maven
 ---
 
+![tomcat](https://raw.githubusercontent.com/FameLsy/Images/master/hexo/tomcat.png)
+
 # 开启tomcat 热部署
 
 热部署：开启状态下部署war包
