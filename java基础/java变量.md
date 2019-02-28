@@ -1,5 +1,5 @@
 ---
-title: java 基础(2):变量
+title: java 基础:变量
 date: 2018-02-02 00:00:02
 tags: 
 - 变量

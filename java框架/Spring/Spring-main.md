@@ -9,23 +9,23 @@ categories:
 
 # Java
 
-1. [java 基础(1):数据类型](https://famelsy.github.io/2018/02/02/(1)java数据类型/)
-2. [java 基础(2):变量](https://famelsy.github.io/2018/02/02/(2)java变量/)
-3. [java 基础(3):数组](https://famelsy.github.io/2018/02/02/(3)java数组/)
-4. [java 基础(4):运算符](https://famelsy.github.io/2018/02/02/(4)java运算符/)
-5. [java 基础(5):流程控制语句](https://famelsy.github.io/2018/02/02/(5)java流程控制语句/)
-6. [java 基础(6):对象与类](https://famelsy.github.io/2018/02/02/(6)对象与类/)
-7. [java 基础(7):继承](https://famelsy.github.io/2018/02/02/(7)继承/)
-8. [java 基础(8):修饰符](https://famelsy.github.io/2018/02/02/(8)修饰符/)
-9. [java 基础(9):Object类](https://famelsy.github.io/2018/02/02/(9)Object类/)
-10. [java 基础(10):反射](https://famelsy.github.io/2018/02/02/(10)反射/)
-11. [java 基础(11):包和接口](https://famelsy.github.io/2018/02/02/(11)包和接口/)
-12. [java基础(12)：异常](https://famelsy.github.io/2018/02/02/(12)异常/)
-13. [java基础(13)：lambda表达式](https://famelsy.github.io/2018/02/02/(13)lambda表达式/)
-14. [java基础(14)：代理](https://famelsy.github.io/2018/02/02/(14)代理/)
-15. [java基础(15)：泛型](https://famelsy.github.io/2018/02/02/(15)泛型/)
-16. [java基础(16)：集合](https://famelsy.github.io/2018/02/02/(16)集合/)
-17. [java基础(17)：多线程](https://famelsy.github.io/2018/02/02/(17)多线程/)
+1. [java 基础(1):数据类型](https://famelsy.github.io//2018//02//02//java数据类型//)
+2. [java 基础(2):变量](https://famelsy.github.io/2018/02/02/java变量/)
+3. [java 基础(3):数组](https://famelsy.github.io/2018/02/02/java数组/)
+4. [java 基础(4):运算符](https://famelsy.github.io/2018/02/02/java运算符/)
+5. [java 基础(5):流程控制语句](https://famelsy.github.io/2018/02/02/java流程控制语句/)
+6. [java 基础(6):对象与类](https://famelsy.github.io/2018/02/02/对象与类/)
+7. [java 基础(7):继承](https://famelsy.github.io/2018/02/02/继承/)
+8. [java 基础(8):修饰符](https://famelsy.github.io/2018/02/02/修饰符/)
+9. [java 基础(9):Object类](https://famelsy.github.io/2018/02/02/Object类/)
+10. [java 基础(10):反射](https://famelsy.github.io/2018/02/02/反射/)
+11. [java 基础(11):包和接口](https://famelsy.github.io/2018/02/02/包和接口/)
+12. [java基础(12)：异常](https://famelsy.github.io/2018/02/02/异常/)
+13. [java基础(13)：lambda表达式](https://famelsy.github.io/2018/02/02/lambda表达式/)
+14. [java基础(14)：代理](https://famelsy.github.io/2018/02/02/代理/)
+15. [java基础(15)：泛型](https://famelsy.github.io/2018/02/02/泛型/)
+16. [java基础(16)：集合](https://famelsy.github.io/2018/02/02/集合/)
+17. [java基础(17)：多线程](https://famelsy.github.io/2018/02/02/多线程/)
 
 # Mybaits
 
@@ -35,7 +35,7 @@ categories:
 4. [Mybatis配置](https://famelsy.github.io/2019/02/16/Mybatis4-%E9%85%8D%E7%BD%AE/)
 5. [Mybatis映射器](https://famelsy.github.io/2019/02/16/MyBaits5-%E6%98%A0%E5%B0%84%E5%99%A8/)
 6. [Mybatis动态sql](https://famelsy.github.io/2019/02/16/Mybatis6-%E5%8A%A8%E6%80%81Sql/)
-7.[Mybatis实例](https://famelsy.github.io/2019/02/16/Mybaits%E5%AE%9E%E4%BE%8B/)
+7. [Mybatis实例](https://famelsy.github.io/2019/02/16/Mybaits%E5%AE%9E%E4%BE%8B/)
 8. [Mybatis错误合集](https://famelsy.github.io/2019/02/16/Mybatis%E9%94%99%E8%AF%AF%E5%90%88%E8%AE%A1/)
 
 # 设计模式
