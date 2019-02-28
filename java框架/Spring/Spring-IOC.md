@@ -101,6 +101,11 @@ bean实例化的三种方式
 <bean id="" class=""/>
 ```
 
+>注  
+>如果不指定id,那么bean的 id将会是类的全名
+> 如class="com.liisyu.dao.impl.UserDaoImpl"
+>那么bean的默认id="com.liisyu.dao.impl.UserDaoImpl"，而不是userDaoImpl
+
 ### 静态工厂
 
 自定义一个静态工厂
