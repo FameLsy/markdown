@@ -9,63 +9,63 @@ categories:
 
 # Java
 
-1. [java åŸºç¡€(1):æ•°æ®ç±»å‹](https://famelsy.github.io/2018/02/02/(1)java%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/)
-2. [java åŸºç¡€(2):å˜é‡](https://famelsy.github.io/2018/02/02/(2)java%E5%8F%98%E9%87%8F/)
-3. [java åŸºç¡€(3):æ•°ç»„](https://famelsy.github.io/2018/02/02/(3)java%E6%95%B0%E7%BB%84/)
-4. [java åŸºç¡€(4):è¿ç®—ç¬¦](https://famelsy.github.io/2018/02/02/(4)java%E8%BF%90%E7%AE%97%E7%AC%A6/)
-5. [java åŸºç¡€(5):æµç¨‹æ§åˆ¶è¯­å¥](https://famelsy.github.io/2018/02/02/(5)java%E7%A8%8B%E5%BA%8F%E6%8E%A7%E5%88%B6%E8%AF%AD%E5%8F%A5/)
-6. [java åŸºç¡€(6):å¯¹è±¡ä¸ç±»](https://famelsy.github.io/2018/02/02/(6)%E5%AF%B9%E8%B1%A1%E4%B8%8E%E7%B1%BB/)
-7. [java åŸºç¡€(7):ç»§æ‰¿](https://famelsy.github.io/2018/02/02/(7)%E7%BB%A7%E6%89%BF/)
-8. [java åŸºç¡€(8):ä¿®é¥°ç¬¦](https://famelsy.github.io/2018/02/02/(8)%E4%BF%AE%E9%A5%B0%E7%AC%A6/)
-9. [java åŸºç¡€(9):Objectç±»](https://famelsy.github.io/2018/02/02/(9)Object%E7%B1%BB/)
-10. [java åŸºç¡€(10):åå°„](https://famelsy.github.io/2018/02/02/(10)%E5%8F%8D%E5%B0%84/)
-11. [java åŸºç¡€(11):åŒ…å’Œæ¥å£](https://famelsy.github.io/2018/02/02/(11)%E5%8C%85%E5%92%8C%E6%8E%A5%E5%8F%A3/)
-12. [javaåŸºç¡€(12)ï¼šå¼‚å¸¸](https://famelsy.github.io/2018/02/02/(12)%E5%BC%82%E5%B8%B8/)
-13. [javaåŸºç¡€(13)ï¼šlambdaè¡¨è¾¾å¼](https://famelsy.github.io/2018/02/02/(13)lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/)
-14. [javaåŸºç¡€(14)ï¼šä»£ç†](https://famelsy.github.io/2018/02/02/(14)%E4%BB%A3%E7%90%86/)
-15. [javaåŸºç¡€(15)ï¼šæ³›å‹](https://famelsy.github.io/2018/02/02/(15)%E6%B3%9B%E5%9E%8B/)
-16. [javaåŸºç¡€(16)ï¼šé›†åˆ](https://famelsy.github.io/2018/02/02/(16)%E9%9B%86%E5%90%88/)
-17. [javaåŸºç¡€(17)ï¼šå¤šçº¿ç¨‹](https://famelsy.github.io/2018/02/02/(17)%E5%A4%9A%E7%BA%BF%E7%A8%8B/)
+1. [java »ù´¡(1):Êı¾İÀàĞÍ](https://famelsy.github.io/2018/02/02/(1)javaÊı¾İÀàĞÍ/)
+2. [java »ù´¡(2):±äÁ¿](https://famelsy.github.io/2018/02/02/(2)java±äÁ¿/)
+3. [java »ù´¡(3):Êı×é](https://famelsy.github.io/2018/02/02/(3)javaÊı×é/)
+4. [java »ù´¡(4):ÔËËã·û](https://famelsy.github.io/2018/02/02/(4)javaÔËËã·û/)
+5. [java »ù´¡(5):Á÷³Ì¿ØÖÆÓï¾ä](https://famelsy.github.io/2018/02/02/(5)javaÁ÷³Ì¿ØÖÆÓï¾ä/)
+6. [java »ù´¡(6):¶ÔÏóÓëÀà](https://famelsy.github.io/2018/02/02/(6)¶ÔÏóÓëÀà/)
+7. [java »ù´¡(7):¼Ì³Ğ](https://famelsy.github.io/2018/02/02/(7)¼Ì³Ğ/)
+8. [java »ù´¡(8):ĞŞÊÎ·û](https://famelsy.github.io/2018/02/02/(8)ĞŞÊÎ·û/)
+9. [java »ù´¡(9):ObjectÀà](https://famelsy.github.io/2018/02/02/(9)ObjectÀà/)
+10. [java »ù´¡(10):·´Éä](https://famelsy.github.io/2018/02/02/(10)·´Éä/)
+11. [java »ù´¡(11):°üºÍ½Ó¿Ú](https://famelsy.github.io/2018/02/02/(11)°üºÍ½Ó¿Ú/)
+12. [java»ù´¡(12)£ºÒì³£](https://famelsy.github.io/2018/02/02/(12)Òì³£/)
+13. [java»ù´¡(13)£ºlambda±í´ïÊ½](https://famelsy.github.io/2018/02/02/(13)lambda±í´ïÊ½/)
+14. [java»ù´¡(14)£º´úÀí](https://famelsy.github.io/2018/02/02/(14)´úÀí/)
+15. [java»ù´¡(15)£º·ºĞÍ](https://famelsy.github.io/2018/02/02/(15)·ºĞÍ/)
+16. [java»ù´¡(16)£º¼¯ºÏ](https://famelsy.github.io/2018/02/02/(16)¼¯ºÏ/)
+17. [java»ù´¡(17)£º¶àÏß³Ì](https://famelsy.github.io/2018/02/02/(17)¶àÏß³Ì/)
 
 # Mybaits
 
-1. [Mybatisç¯å¢ƒæ­å»º](https://famelsy.github.io/2019/02/16/Mybatis1-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/)
-2. [MybatisåŸºæœ¬æ„æˆ](https://famelsy.github.io/2019/02/16/MyBaits2-%E5%9F%BA%E6%9C%AC%E6%9E%84%E6%88%90/)
-3. [Mybatisç”Ÿå‘½å‘¨æœŸ](https://famelsy.github.io/2019/02/16/Mybatis3-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/)
-4. [Mybatisé…ç½®](https://famelsy.github.io/2019/02/16/Mybatis4-%E9%85%8D%E7%BD%AE/)
-5. [Mybatisæ˜ å°„å™¨](https://famelsy.github.io/2019/02/16/MyBaits5-%E6%98%A0%E5%B0%84%E5%99%A8/)
-6. [MybatisåŠ¨æ€sql](https://famelsy.github.io/2019/02/16/Mybatis6-%E5%8A%A8%E6%80%81Sql/)
-7.[Mybatiså®ä¾‹](https://famelsy.github.io/2019/02/16/Mybaits%E5%AE%9E%E4%BE%8B/)
-8. [Mybatisé”™è¯¯åˆé›†](https://famelsy.github.io/2019/02/16/Mybatis%E9%94%99%E8%AF%AF%E5%90%88%E8%AE%A1/)
+1. [Mybatis»·¾³´î½¨](https://famelsy.github.io/2019/02/16/Mybatis1-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/)
+2. [Mybatis»ù±¾¹¹³É](https://famelsy.github.io/2019/02/16/MyBaits2-%E5%9F%BA%E6%9C%AC%E6%9E%84%E6%88%90/)
+3. [MybatisÉúÃüÖÜÆÚ](https://famelsy.github.io/2019/02/16/Mybatis3-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/)
+4. [MybatisÅäÖÃ](https://famelsy.github.io/2019/02/16/Mybatis4-%E9%85%8D%E7%BD%AE/)
+5. [MybatisÓ³ÉäÆ÷](https://famelsy.github.io/2019/02/16/MyBaits5-%E6%98%A0%E5%B0%84%E5%99%A8/)
+6. [Mybatis¶¯Ì¬sql](https://famelsy.github.io/2019/02/16/Mybatis6-%E5%8A%A8%E6%80%81Sql/)
+7.[MybatisÊµÀı](https://famelsy.github.io/2019/02/16/Mybaits%E5%AE%9E%E4%BE%8B/)
+8. [Mybatis´íÎóºÏ¼¯](https://famelsy.github.io/2019/02/16/Mybatis%E9%94%99%E8%AF%AF%E5%90%88%E8%AE%A1/)
 
-# è®¾è®¡æ¨¡å¼
+# Éè¼ÆÄ£Ê½
 
-[è®¾è®¡æ¨¡å¼](https://famelsy.github.io/2019/01/01/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/)
+[Éè¼ÆÄ£Ê½](https://famelsy.github.io/2019/01/01/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/)
 
 # maven
 
-1. [maven(1) åŸºç¡€ä»‹ç»](https://famelsy.github.io/2019/02/21/maven1-%E5%9F%BA%E7%A1%80%E4%BB%8B%E7%BB%8D/)
-2. [maven(2) ä»“åº“](https://famelsy.github.io/2019/02/21/maven2-%E4%BB%93%E5%BA%93/)
+1. [maven(1) »ù´¡½éÉÜ](https://famelsy.github.io/2019/02/21/maven1-%E5%9F%BA%E7%A1%80%E4%BB%8B%E7%BB%8D/)
+2. [maven(2) ²Ö¿â](https://famelsy.github.io/2019/02/21/maven2-%E4%BB%93%E5%BA%93/)
 3. [maven(3) pom](https://famelsy.github.io/2019/02/21/maven3-pom/)
-4. [maven(4) ç”Ÿå‘½å‘¨æœŸ](https://famelsy.github.io/2019/02/21/maven4-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/)
-5. [maven(5) å¸¸ç”¨å‘½ä»¤](https://famelsy.github.io/2019/02/21/maven5-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/)
-6. [maven(6) ä¾èµ–](https://famelsy.github.io/2019/02/21/maven6-%E4%BE%9D%E8%B5%96/)
-7. [maven(7) tomcatçƒ­éƒ¨ç½²](https://famelsy.github.io/2019/02/21/maven7-tomvat%E7%83%AD%E9%83%A8%E7%BD%B2/)
+4. [maven(4) ÉúÃüÖÜÆÚ](https://famelsy.github.io/2019/02/21/maven4-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/)
+5. [maven(5) ³£ÓÃÃüÁî](https://famelsy.github.io/2019/02/21/maven5-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/)
+6. [maven(6) ÒÀÀµ](https://famelsy.github.io/2019/02/21/maven6-%E4%BE%9D%E8%B5%96/)
+7. [maven(7) tomcatÈÈ²¿Êğ](https://famelsy.github.io/2019/02/21/maven7-tomvat%E7%83%AD%E9%83%A8%E7%BD%B2/)
 
 # Spring
 
-## ä½“ç³»ç»“æ„å›¾
+## ÌåÏµ½á¹¹Í¼
 
 ![spring](https://raw.githubusercontent.com/FameLsy/Images/master/spring/spring.png)
 
-## Spring çŸ¥è¯†ä½“ç³»
+## Spring ÖªÊ¶ÌåÏµ
 
 1. [Spring IOC](https://famelsy.github.io/2018/02/27/Spring-IOC/)
 2. [Spring AOP](https://famelsy.github.io/2018/02/27/Spring-AOP/)
 
 # git
 
-# httpåè®®
+# httpĞ­Òé
 
 # blog
 
@@ -77,4 +77,4 @@ categories:
 
 # leetcode
 
-# java å¹¶å‘
+# java ²¢·¢
