@@ -18,3 +18,18 @@ categories:
 解压后可得lib包或者jar包，我们选择jar包导入
 
 
+```xml
+<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
+<dependency>
+    <groupId>org.mybatis</groupId>
+    <artifactId>mybatis</artifactId>
+    <version>3.4.6</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>5.1.25</version>
+</dependency>
+
+```
