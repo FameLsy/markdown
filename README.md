@@ -1,10 +1,10 @@
 ---
-title: Main
+title: README
 date: 3019-02-27 00:00:00
 tgas: 
-- Spring-Main
+- README
 categories: 
-- Spring 
+- 导航
 ---
 
 # Java
@@ -13,7 +13,7 @@ categories:
 2. [java 基础(2):变量](https://famelsy.github.io/2018/02/02/java变量/)
 3. [java 基础(3):数组](https://famelsy.github.io/2018/02/02/java数组/)
 4. [java 基础(4):运算符](https://famelsy.github.io/2018/02/02/java运算符/)
-5. [java 基础(5):流程控制语句](https://famelsy.github.io/2018/02/02/java流程控制语句/)
+5. [java 基础(5):流程控制语句](https://famelsy.github.io/2018/02/02/java%E7%A8%8B%E5%BA%8F%E6%8E%A7%E5%88%B6%E8%AF%AD%E5%8F%A5/)
 6. [java 基础(6):对象与类](https://famelsy.github.io/2018/02/02/对象与类/)
 7. [java 基础(7):继承](https://famelsy.github.io/2018/02/02/继承/)
 8. [java 基础(8):修饰符](https://famelsy.github.io/2018/02/02/修饰符/)
@@ -39,6 +39,35 @@ categories:
 8. [Mybatis错误合集](https://famelsy.github.io/2019/02/16/Mybatis%E9%94%99%E8%AF%AF%E5%90%88%E8%AE%A1/)
 
 # 设计模式
+
+创建型模式:
+1. [单例模式]
+2. [工厂模式]
+3. [抽象工厂]
+3. [建造者模式]
+4. [原型模式]
+
+结构型模式：
+1. [适配器模式]
+2. [桥接模式]
+3. [组合模式]
+4. [装饰者模式]
+5. [外观模式]
+6. [享元模式]
+7. [代理模式]
+
+行为型模式：
+1. [职责链模式]
+2. [命令模式]
+3. [解释器模式]
+4. [迭代器模式]
+5. [中介者模式]
+6. [备忘录模式]
+7. [观察者模式]
+8. [状态模式]
+9. [策略模式]
+10. [模板方法模式]
+11. [访问者模式]
 
 [设计模式](https://famelsy.github.io/2019/01/01/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/)
 
