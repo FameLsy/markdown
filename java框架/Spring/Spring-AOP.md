@@ -199,6 +199,34 @@ public class UserDaoImpl implements UserDao {
     }
 }
 ```
+配置文件
+```xml
+<bean class="com.liisyu.demo1.UserDaoImpl"/>
+<!--配置通知、增强-->
+<bean id="myAdvice" class="com.liisyu.demo1.MyAdvice"/>
+
+<!--AOP配置-->
+<aop:config>
+    <aop:aspect ref="myAdvice">
+        <aop:pointcut id="pointcut"
+                    expression="execution(void com.liisyu.demo1.UserDaoImpl.insert())"/>
+    <!--<aop:before method="log"-->
+                <!--pointcut="execution(void com.liisyu.dao.impl.UserDaoImpl.insert())"/>-->
+    <!--<aop:after-returning method="log2"-->
+                <!--pointcut="execution(void com.liisyu.dao.impl.UserDaoImpl.insert())"/>-->
+    <!--<aop:after method="log3"-->
+                <!--pointcut="execution(void com.liisyu.dao.impl.UserDaoImpl.insert())"/>-->
+    <!--<aop:after-throwing method="log4"-->
+                        <!--pointcut="execution(void com.liisyu.dao.impl.UserDaoImpl.insert())"/>-->
+    <!--<aop:around method="log5"-->
+                <!--pointcut="execution(void com.liisyu.demo1.UserDaoImpl.insert())"/>-->
+
+    <aop:around method="log5"
+                pointcut-ref="pointcut"/>
+    </aop:aspect>
+</aop:config>
+</beans>
+```
 此外，还可以通过< aop-pointcut >标签来设置切入点
 ```xml
 <aop:pointcut id="pointcut"  expression="execution(void com.liisyu.demo1.UserDaoImpl.insert())"/>
