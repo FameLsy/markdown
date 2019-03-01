@@ -6,6 +6,12 @@ tgas:
 categories: 
 - Spring 
 ---
+知识点:
+1. 概念
+2. IOC 容器的创建
+3. IOC bean 的相关操作
+4. IOC 依赖注入
+5. 常用注解
 
 # 什么是IOC？  
 
