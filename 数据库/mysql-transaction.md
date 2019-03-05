@@ -2,9 +2,9 @@
 title: mysql-transaction(事务)
 date: 2019-02-28 00:00:02
 tgas: 
-- Spring-transaction(事务)
+- mysql-transaction(事务)   
 categories: 
-- Spring 
+- Database 
 ---
 
 # 什么是事务
