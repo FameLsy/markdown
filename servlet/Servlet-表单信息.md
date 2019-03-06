@@ -1,7 +1,7 @@
 ---
-title: Servlet-资源
+title: Servlet-表单信息
 tags: 
-- Servlet-资源
+- Servlet-表单信息
 categories: 
 - Servlet
 ---

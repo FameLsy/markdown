@@ -8,7 +8,7 @@ categories:
 
 # Servlet 接口
 
-Servlet 是一个，位于javax.servlet.Servlet
+Servlet 位于javax.servlet.Servlet
 
 Servlet规范是建立在HTTP规范基础上，HTTP 1.1规范支持OPTIONS、GET、POST、HEAD、PUT、DELETE以及TRACE等7中Web访问方式,只需要了解POST和GET即可
 
