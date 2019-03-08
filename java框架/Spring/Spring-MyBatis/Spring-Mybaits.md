@@ -1,6 +1,5 @@
 ---
 title: Spring-Mybatis
-date: 2018-02-27 00:00:04
 tgas: 
 - Spring-Mybatis
 categories: 

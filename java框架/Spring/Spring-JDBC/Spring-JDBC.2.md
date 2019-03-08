@@ -1,43 +1,18 @@
 ---
-title: Spring-JDBC
-date: 2018-02-27 00:00:03
+title: Spring提供的JDBC支持
 tgas: 
-- Spring-JDBC
+- Spring提供的JDBC支持
 categories: 
 - Spring 
 ---
 
-知识点:
-1. JdbcTemplate模板类的使用
-2. 默认数据库连接池DriverManagerDataSource
-3. Spring第三方连接池的使用
-4. JdbcDaoSupport,提供简化操作
-
-# JDBC-MAVEN
-导入
-1. mysql驱动程序包
-2. spring对jdbc的支持
-
-```xml
-<dependency>
-    <groupId>mysql</groupId>
-    <artifactId>mysql-connector-java</artifactId>
-    <version>${mysql.connector.version}</version>
-</dependency>
-
-<dependency>
-    <groupId>org.springframework</groupId>
-    <artifactId>spring-jdbc</artifactId>
-    <version>${spring.version}</version>
-</dependency>
-```
 
 # Spring提供的JDBC支持类
 
 JdbcTemplate类：模板类
 DriverManagerDataSource: Spring的内置连接池
 
-## 手动创建:
+## 手动创建
 ```java
 /**
  * 简单的Spring-JDBC测试
@@ -184,112 +159,4 @@ public class TestJdbcTemplate {
     }
 
 }
-```
-
-# Spring管理第三方连接池
-
-## 管理DBCP
-
-pom:
-```xml
-<!--dbcp连接池依赖-->
-<dependency>
-    <groupId>commons-dbcp</groupId>
-    <artifactId>commons-dbcp</artifactId>
-    <version>${dbcp.version}</version>
-</dependency>
-```
-
-配置
-```xml
-<!--设置DBCP连接池-->
-<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
-    <property name="driverClassName" value="${db.driverClassName}"/>
-    <property name="url" value="${db.url}"/>
-    <property name="username" value="${db.username}"/>
-    <property name="password" value="${db.password}"/>
-</bean>
-```
-
-## 管理C3P0连接池
-
-pom
-```xml
-<dependency>
-    <groupId>com.mchange</groupId>
-    <artifactId>c3p0</artifactId>
-    <version>${c3p0.version}</version>
-</dependency>
-```
-
-配置
-```xml
-<!--设置C3P0连接池-->
-<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-    <property name="driverClass" value="${db.driverClassName}"/>
-    <property name="jdbcUrl" value="${db.url}"/>
-    <property name="user" value="${db.username}"/>
-    <property name="password" value="${db.password}"/>
-</bean>
-```
-
-# Spring DAO开发（JdbcDAoSupport）
-
-使用Spring管理JdbcTemplate类后，我们需要写如下一步导入jdbc
-```java
-@Resource(name="jdbcTemplate")
-private JdbcTemplate jdbcTemplate;
-```
-并且在xml配置JdbcTemplate,并传入dataSource
-```xml
-<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-    <property name="dataSource" ref="dataSource"/>
-</bean>
-```
-
-Spring提供了JdbcDAoSupport，帮我们省去这一步，只需要继承该类
-```java
-/**
- * @author liisyu
- * @date 2019/3/1
- */
-public class DemoDao extends JdbcDaoSupport {
-    /**
-     * 继承后，使用this.getJdbcTemplate()获取JdbcTemplate
-     */
-    public void test(){
-        this.getJdbcTemplate().update("insert into account values ('liisyu3',?,?)", "测试2",100002);
-    }
-}
-```
-并且配置文件，需要为该类注入DataSource
-```xml
-    <bean id="demoDao" class="com.liisyu.Jdbctest.DemoDao">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
-```
-
-实际上本质是JdbcDaoSupport帮我们完成了这件事
-```java
-public abstract class JdbcDaoSupport extends DaoSupport {
-
-	@Nullable
-	private JdbcTemplate jdbcTemplate;
-
-    	/**
-	 * Set the JDBC DataSource to be used by this DAO.
-	 */
-	public final void setDataSource(DataSource dataSource) {
-		if (this.jdbcTemplate == null || dataSource != this.jdbcTemplate.getDataSource()) {
-			this.jdbcTemplate = createJdbcTemplate(dataSource);
-			initTemplateConfig();
-		}
-	}
-
-    	@Nullable
-	public final JdbcTemplate getJdbcTemplate() {
-	  return this.jdbcTemplate;
-	}
-
-...
 ```
