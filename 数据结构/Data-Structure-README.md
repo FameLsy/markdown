@@ -14,12 +14,19 @@ categories:
 - [空间复杂度](https://famelsy.github.io/2019/03/16/data-analysis.1/)
 - [时间复杂度](https://famelsy.github.io/2019/03/16/data-analysis.2/)
 
-线性结构:
+线性结构
 - [数组](https://famelsy.github.io/2019/03/16/data-structure.1/)
 - [链表](https://famelsy.github.io/2019/data-structure.2/)
 - [栈](https://famelsy.github.io/2019/03/16/data-structure.3/)
 - [队列](https://famelsy.github.io/2019/03/16/data-structure.4/)
 - [跳表](https://famelsy.github.io/2019/03/16/data-structure.5/)
+- [散列表]
+
+树
+- [二叉树]
+- [二叉树的遍历]
+- [二叉查找树]
+- [红黑树]
 
 其他数据结构
 - [跳表]
@@ -37,7 +44,7 @@ categories:
 - [计数排序](https://famelsy.github.io/2019/03/16/data-sort.9/)
 - [选择排序](https://famelsy.github.io/2019/03/16/data-sort.10/)
 - [二分查找]
-
+- [Hash算法]
 
 
 

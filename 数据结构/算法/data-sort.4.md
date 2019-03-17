@@ -1,10 +1,4 @@
----
-title: 插入排序
-tags: 
-- 插入排序
-categories: 
-- 算法
----
+
 
 ## 插入排序（Insertion Sort）
 
