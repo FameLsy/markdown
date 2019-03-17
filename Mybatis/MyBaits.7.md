@@ -1,6 +1,5 @@
 ---
 title: Mybatis实例
-date: 2019-02-16 00:00:20
 tags: 
 - Mybatis实例
 categories: 

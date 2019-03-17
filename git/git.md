@@ -662,21 +662,30 @@ git commit -am"修改冲突"
 git mergetoo
 ```
 ## 删除分支
+
 **删除分支** ： *git branch -d < branch-name >*
+
 ```
 git branch -d hotfix
 ```
+
 该命令无法删除当前分支未合并的分支，如果一定要删除，需要适用强制删除  
-**强制删除** ： *git branch -D < branch-name >*
+
+**强制删除** 
+
 ```
-git branch -D hotfix
+git branch -D < branch-name >
 ``` 
+
 ## 远程分支
 **远程引用的完整列表** : *git ls-remote < remote-name >*
+
 ```
 git ls-remote htofix
 ```
+
 **获得远程分支信息** : *git remote show < remote-name >*
+
 ```
 git remote show origin
 ```

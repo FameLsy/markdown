@@ -1,6 +1,5 @@
 ---
 title: Mybatis配置
-date: 2019-02-16 00:00:04
 tags: 
 - Mybatis配置
 categories: 

@@ -19,21 +19,21 @@ java基础
 
 管理工具
 - [maven](https://famelsy.github.io/2019/03/09/Maven-README/)
-- git
+- [git](https://famelsy.github.io/2019/03/09/git/)
 
 数据库
-- Mybaits
-- MySQL
+- [Mybaits](https://famelsy.github.io/2019/03/09/MyBatis-README/)
+- [MySQL](https://famelsy.github.io/2019/03/09/MySQL-README/)
 
 Spring
 - [Spring](https://famelsy.github.io/2019/03/08/Spring-README/)
 
 其他
 - blog
-- hexo博客
+- [hexo博客](https://famelsy.github.io/2019/03/09/hexo%E6%8D%A3%E9%BC%93%E7%AC%94%E8%AE%B0/)
 
 数据结构与算法
-- 数据结构
+- [数据结构](https://famelsy.github.io/2019/03/16/Data-Structure-README/)
 - leetcode
 
 服务器
