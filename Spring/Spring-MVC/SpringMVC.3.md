@@ -1,12 +1,5 @@
----
-title: 注解式处理器映射器组件配置
-tgas: 
-- 注解式处理器映射器组件配置
-categories: 
-- SpringMVC
----
+#  注册HandlerMapping
 
-# 注解式处理器映射器组件配置
 
 RequestMappingHandlerMapping(注解式处理器映射器):  
 1. 对类中标记@ResquestMapping的方法进行映射

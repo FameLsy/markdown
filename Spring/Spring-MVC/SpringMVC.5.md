@@ -1,12 +1,5 @@
----
-title: 注解式处理器适配器组件配置
-tgas: 
-- 注解式处理器适配器组件配置
-categories: 
-- SpringMVC
----
+#  注册HandlAdapter：处理器适配器
 
-# 注解式处理器适配器配置
 
 RequestMappingHandlerAdapter(注解式处理器适配器)
 1. 对标记@ResquestMapping的方法进行适配

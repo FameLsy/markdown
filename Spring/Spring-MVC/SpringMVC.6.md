@@ -1,12 +1,5 @@
----
-title: 视图解析器配置
-tgas: 
-- 视图解析器配置
-categories: 
-- SpringMVC
----
+#  注册View Resolver：视图解析器 
 
-# 视图解析器配置
 
 视图解析器配置
 

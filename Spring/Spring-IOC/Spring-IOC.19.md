@@ -1,10 +1,10 @@
----
+<!-- ---
 title: Spring-IOC-profile
 tags: 
 - Spring-IOC-profile
 categories: 
 - Spring 
----
+--- -->
 
 作用：  
 通过激活不同的profile，达到加载不同的bean,可以使用注解，也可以使用xml配置
@@ -80,9 +80,9 @@ Spring 激活profile主要依赖两个属性
 <!-- 为上下文设置默认的profile -->
     <context-param>
         <param-name>spring.profiles.default</param-name>
-        <param-value>/WEN-INF/spring/root-context.xml</param-value>
+        <param-value>dev</param-value>
     </context-param>
-
+<!-- 为servlet设置profile -->
     <servlet>
         ...
         <init-param>

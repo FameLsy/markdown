@@ -1,12 +1,17 @@
----
+<!-- ---
 title: SpringMVC-上传图片
 tgas: 
 - SpringMVC-上传图片
 categories: 
 - SpringMVC
----
+--- -->
 
 SpringMVC文件上传的实现，是由commons-fileupload这个jar包实现的。
+
+对于上传页面，需要设置：
+```
+enctype=”multipart/form-data”
+```
 
 # 依赖
 ```xml

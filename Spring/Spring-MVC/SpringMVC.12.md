@@ -1,14 +1,23 @@
----
+<!-- ---
 title: SpringMVC-异常处理器
 tgas: 
 - SpringMVC-异常处理器
 categories: 
 - SpringMVC
----
+--- -->
 
-springmvc在处理请求过程中出现异常信息交由异常处理器进行处理，自定义异常处理器可以实现一个系统的异常处理逻辑。
+异常包含编译时异常和运行时异常，其中编译时异常也叫预期异常。
+运行时异常只有在项目运行的情况下才会发现，编译的时候不需要关心。
+
+运行时异常，比如：空指针异常、数组越界异常，对于这样的异常，只能通过程序员丰富的经验来解决和测试人员不断的严格测试来解决。
+
+编译时异常，比如：数据库异常、文件读取异常、自定义异常等。对于这样的异常，必须使用try catch代码块或者throws关键字来处理异常。
+
+
 
 # 异常处理思路
+springmvc在处理请求过程中出现异常信息交由异常处理器进行处理，自定义异常处理器可以实现一个系统的异常处理逻辑。
+
 系统的dao、service、controller出现都通过throws Exception向上抛出，最后由springmvc前端控制器交由异常处理器进行异常处理，如下图：
 
 ![异常](https://raw.githubusercontent.com/FameLsy/Images/master/spring/异常.png)
@@ -23,7 +32,7 @@ springmvc在处理请求过程中出现异常信息交由异常处理器进行�
 2. 自定义异常处理器(实现HandlerExceptionResolver)
 3. 配置异常处理器
 
-自定义异常类
+## 自定义异常类
 ```java
 public class MyExcepetion extends Exception {
 	
@@ -47,7 +56,7 @@ public class MyExcepetion extends Exception {
 }
 ```
 
-自定义异常处理器
+## 自定义异常处理器
 1. 实现HandlerExceptionResolver
 2. 重写resolveException()
 ```java
@@ -76,7 +85,7 @@ public class MyExcepetionResolver implements HandlerExceptionResolver {
 }
 ```
 
-配置异常处理器
+## 配置异常处理器
 ```
 <!-- springmvc.xml -->
 <bean class="com.kkb.ssm.resolver.BusinessExceptionResolver"/>

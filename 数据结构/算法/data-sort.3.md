@@ -1,10 +1,10 @@
----
+<!-- ---
 title: 冒泡排序
 tags: 
 - 冒泡排序
 categories: 
 - 算法
----
+--- -->
 
 ## 冒泡排序(Bubble Sort)
 

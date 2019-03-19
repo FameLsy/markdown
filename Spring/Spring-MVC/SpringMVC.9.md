@@ -1,10 +1,5 @@
----
-title: SpringMVC-@RequestMapping
-tgas: 
-- SpringMVC-@RequestMapping
-categories: 
-- SpringMVC
----
+
+<!-- @RequestMapping -->
 
 在Spring-MVC通过@RequestMapping注解，可以定义不同的处理器映射规则
 
@@ -18,7 +13,7 @@ categories:
 ```
 
 # 窄化请求映射
-将@RequstMapping配置到class类上，指定通用的请求前缀， 限制此类下的所有方法的访问请求url必须以请求前缀开头，通过此方法对url进行模块化分类管理。
+将@RequstMapping配置到 class 类上，指定通用的请求前缀， 限制此类下的所有方法的访问请求url必须以请求前缀开头，通过此方法对url进行模块化分类管理。
 
 如,想要访问add方法，那请求url必须是/item/add
 ```java
@@ -30,6 +25,7 @@ class demo{
     }
 }
 ```
+
 # 请求方法限定 
 
 主要是限制客户端访问的请求方式

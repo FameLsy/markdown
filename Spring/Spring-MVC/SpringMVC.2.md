@@ -1,12 +1,4 @@
----
-title: DispatcherServlet组件配置
-tgas: 
-- DispatcherServlet组件配置
-categories: 
-- SpringMVC
----
-
-# DispatcherServlet组件配置
+#  注册DispatcherServlet
 
 方式为在web.xml中配置
 1. 设置了初始化参数contextConfigLocation,按指定路径加载配置文件

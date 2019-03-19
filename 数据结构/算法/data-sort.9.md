@@ -1,10 +1,10 @@
----
+<!-- ---
 title: 计数排序
 tags: 
 - 计数排序
 categories: 
 - 算法
----
+--- -->
 ## 计数排序（Counting sort）
 
 核心思想

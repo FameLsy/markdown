@@ -1,10 +1,10 @@
----
+<!-- ---
 title: SpringMVC-请求参数绑定
 tgas: 
 - SpringMVC-请求参数绑定
 categories: 
 - SpringMVC
----
+--- -->
 
 什么是请求参数绑定?
 
@@ -15,19 +15,21 @@ categories:
 # SpringMVC默认支持的参数类型
 
 SpringMVC默认支持如下参数类型，Controller方法形参中可以随时添加这些类型的参数，处理适配器会自动识别并进行赋值。
-1. HttpServletRequest
-2. HttpServletResponse
-3. HttpSession
+1. HttpServletRequest:通过request对象获取请求信息
+2. HttpServletResponse:通过response处理响应信息
+3. HttpSession:通过session对象得到session中存放的对象
 3. InputStream、OutputStream
 4. Reader、Writer
 5. Model/ModelMap
 
+---
 ModelMap继承自LinkedHashMap，Model是一个接口，它们的底层实现都是同一个类（BindingAwareModelMap），作用就是向页面传递数据，相当于Request的作用
 
 通过
 ```java
 model.setAttribute(key, value);
 ```
+---
 
 # 参数绑定
 
@@ -186,9 +188,9 @@ public class ItemQueryVO {
 
 控制器如下,方法参数时一个POJO类（内含List< Item >）
 ```java
-	@RequestMapping("/batchUpdateItem")
-	public String batchUpdateItem(ItemQueryVO vo) {
-	}
+@RequestMapping("/batchUpdateItem")
+public String batchUpdateItem(ItemQueryVO vo) {
+}
 ```
 
 ## 自定义参数绑定

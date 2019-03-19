@@ -1,10 +1,10 @@
----
+<!-- ---
 title: 桶排序
 tags: 
 - 桶排序
 categories: 
 - 算法
----
+--- -->
 
 ## 桶排序（Bucket sort）
 

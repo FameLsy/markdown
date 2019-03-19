@@ -1,10 +1,10 @@
----
+<!-- ---
 title: SpringMVC-@ControllerAdvice
 tgas: 
 - SpringMVC-@ControllerAdvice
 categories: 
 - SpringMVC
----
+--- -->
 
 @ControllerAdvice：
 1. 该注解了@Controller注解的类进行增强。
@@ -15,7 +15,7 @@ categories:
 
 该注解的使用步骤为
 1. 通过@ControllerAdvice注解，配置一个自定义的ControllerAdvice
-2. 在内部使用@ModelAttribute、@InitBinder、	@ExceptionHandler(Exception.class)来实现对@@RequestMapping的增强
+2. 在内部使用@ModelAttribute、@InitBinder、	@ExceptionHandler(Exception.class)来实现对@Controller的增强
 
 ```java
 @ControllerAdvice
