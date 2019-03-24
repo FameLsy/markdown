@@ -1,10 +1,10 @@
----
+<!-- ---
 title: java并发(1)：并发基础
 tags: 
 - 并发基础
 categories: 
 - java并发
----
+--- -->
 
 # 什么是线程
 现代操作系统在运行一个程序时，会为其创建一个进程。  
@@ -329,9 +329,7 @@ public final synchronized void join() throws InterruptedException {
 可以发现，符合先前通知/等待经典范式的加锁、通知、处理逻辑三个步骤
 
 ## ThreadLocal的使用
-ThreadLocal,即线程变量(泛型),是一个以ThreadLocal对象为键、任意对象为值的存储结构  
-
-一个线程可以根据一个ThreadLocal对象查询到绑定在这个线程上的一个值
+ThreadLocal,即*线程变量(泛型)*,是一个以ThreadLocal对象为键、任意对象为值的存储结构；一个线程可以根据一个ThreadLocal对象查询到绑定在这个线程上的一个值
 
 ```java
 // 创建
