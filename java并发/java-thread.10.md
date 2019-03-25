@@ -32,6 +32,7 @@ JDK 7提供了7个阻塞队列
 7. LinkedBlockingDeque：一个由链表结构组成的双向阻塞队列。
 
 ## ArrayBlockingQueue
+
 ArrayBlockingQueue:
 - 由数组结构组成的有界阻塞队列
 - 此队列按照先进先出（FIFO）的原则对元素进行排序
@@ -201,7 +202,7 @@ return awaitMatch(s, pred, e, (how == TIMED), nanos);
 - 如果没有消费者消费该元素则等待指定的时间再返回，如果超时还没消费元素，则返回false
 - 如果在超时时间内消费了元素，则返回true。
 
-### LinkedBlockingDeque
+## LinkedBlockingDeque
 
 LinkedBlockingDeque
 - 由链表结构组成的双向阻塞队列
@@ -209,3 +210,10 @@ LinkedBlockingDeque
 - 相比其他的阻塞队列，LinkedBlockingDeque多了addFirst、addLast、offerFirst、offerLast、peekFirst和peekLast等方法
 - 在初始化LinkedBlockingDeque时可以设置容量防止其过度膨胀。
 - 双向阻塞队列可以  运用在“工作窃取”模式中。
+
+# 阻塞队列的实现原理
+
+在JDK中，使用通知模式实现;所谓通知模式，就是当生产者往满的队列里添加元素时会阻塞住生产者，当消费者消费了一个队列中的元素后，会通知生产者当前队列可用
+
+todo
+
