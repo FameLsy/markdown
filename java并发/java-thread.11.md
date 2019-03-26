@@ -80,3 +80,19 @@ public class CountTask extends RecursiveTask<Integer> {
     }
 }
 ```
+
+# Fork/Join框架的异常处理
+
+检查任务是否已经抛出异常或已经被取消
+
+```java
+aForkJoinTask.isCompletedAbnormally()
+```
+
+获取异常
+```java
+//返回Throwable对象，如果任务被取消了则返回CancellationException;任务没有完成或者没有抛出异常则返回null
+aForkJoinTask.getException()
+```
+
+# Fork/Join框架的实现原理

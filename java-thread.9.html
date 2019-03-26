@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>java-thread.9.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: "Segoe WPC", "Segoe UI", "SFUIText-Light", "HelveticaNeue-Light", sans-serif, "Droid Sans Fallback";
+	font-size: 14px;
+	padding: 0 12px;
+	line-height: 22px;
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	color: #4080D0;
+	text-decoration: none;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+h1 code,
+h2 code,
+h3 code,
+h4 code,
+h5 code,
+h6 code {
+	font-size: inherit;
+	line-height: auto;
+}
+
+a:hover {
+	color: #4080D0;
+	text-decoration: underline;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left: 5px solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 14px;
+	line-height: 19px;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+.mac code {
+	font-size: 12px;
+	line-height: 18px;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+/** Theming */
+
+.vscode-light,
+.vscode-light pre code {
+	color: rgb(30, 30, 30);
+}
+
+.vscode-dark,
+.vscode-dark pre code {
+	color: #DDD;
+}
+
+.vscode-high-contrast,
+.vscode-high-contrast pre code {
+	color: white;
+}
+
+.vscode-light code {
+	color: #A31515;
+}
+
+.vscode-dark code {
+	color: #D7BA7D;
+}
+
+.vscode-light pre:not(.hljs),
+.vscode-light code > div {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre:not(.hljs),
+.vscode-dark code > div {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre:not(.hljs),
+.vscode-high-contrast code > div {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+.vscode-light blockquote,
+.vscode-dark blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.vscode-high-contrast blockquote {
+	background: transparent;
+	border-color: #fff;
+}
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family:  "Meiryo", "Segoe WPC", "Segoe UI", "SFUIText-Light", "HelveticaNeue-Light", sans-serif, "Droid Sans Fallback";
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+</head>
+<body>
+<!-- # 队列同步器 -->
+<h1 id="%E9%98%9F%E5%88%97%E5%90%8C%E6%AD%A5%E5%99%A8abstractqueuedsynchronizer">队列同步器(AbstractQueuedSynchronizer)</h1>
+<p>简称AQS，是一个抽象类，用来构建锁或者其他同步组件的基础框架，同步器设计是基于模板方法模式，它使用了一个int成员变量表示同步状态，通过内置的FIFO队列来完成资源获取线程的排队工作。子类通过继承他，来进行管理同步状态，AQS主要提供三个方法来改变或访问同步状态</p>
+<pre class="hljs"><code><div><span class="hljs-comment">//获取当前同步状态。</span>
+getState()
+<span class="hljs-comment">//设置当前同步状态。</span>
+setState(<span class="hljs-keyword">int</span> newState)：
+<span class="hljs-comment">//使用CAS设置当前状态，该方法能够保证状态设置的原子性。传递当前线程“认为”的尾节点和当前节点，如果设置成功（即tail成功指向当前节点）,则返回true</span>
+compareAndSetState(<span class="hljs-keyword">int</span> expect,<span class="hljs-keyword">int</span> update)：
+</div></code></pre>
+<h2 id="%E5%90%8C%E6%AD%A5%E5%99%A8%E5%8F%AF%E9%87%8D%E5%86%99%E7%9A%84%E6%96%B9%E6%B3%95">同步器可重写的方法</h2>
+<p><img src="https://raw.githubusercontent.com/FameLsy/Images/master/thread/thread6.png" alt="thread6"></p>
+<h2 id="%E5%90%8C%E6%AD%A5%E5%99%A8%E7%9A%84%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95">同步器的模板方法</h2>
+<p>实现自定义同步组件时，将会调用同步器提供的模板方法，同步器提供的模板方法如下,其大致分为三类</p>
+<ol>
+<li>独占式获取与释放同步状态</li>
+<li>共享式获取与释放同步状态</li>
+<li>查询同步队列中的等待线程情况</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/FameLsy/Images/master/thread/thread7.png" alt="thread7"></p>
+<h2 id="%E9%98%9F%E5%88%97%E5%90%8C%E6%AD%A5%E5%99%A8%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90">队列同步器的实现分析</h2>
+<p>实现一个同步器，主要包括</p>
+<ol>
+<li>同步队列</li>
+<li>独占式同步状态获取与释放</li>
+<li>共享式同步状态获取与释放</li>
+<li>超时获取同步状态等同步器的核心数据结构与模板方法。</li>
+</ol>
+<h3 id="%E5%90%8C%E6%AD%A5%E9%98%9F%E5%88%97">同步队列</h3>
+<p>使用FIFO双向队列完成同步状态的管理。</p>
+<ul>
+<li>当前线程获取同步状态失败时，将节点加入该队列的尾部，同时会阻塞当前线程</li>
+<li>当同步状态释放时，会把首节点中的线程唤醒，使其再次尝试获取同步状态。</li>
+<li>同步队列中的节点（Node）用来保存获取同步状态失败的线程引用、等待状态以及前驱和后继节点，节点的属性类型与名称以及描述</li>
+</ul>
+<p>节点描述：</p>
+<p><img src="https://raw.githubusercontent.com/FameLsy/Images/master/thread/thread8.png" alt="thread8"></p>
+<p>此外，同步器拥有首节点（head）和尾节点（tail），以下是同步器的基本结构</p>
+<p><img src="https://raw.githubusercontent.com/FameLsy/Images/master/thread/thread9.png" alt="thread9"></p>
+<p>对于入列操作，需要保证其安全性，同步器提供了一个基于CAS的设置尾节点的方法</p>
+<pre class="hljs"><code><div>compareAndSetTail(Node expect,Node update)
+</div></code></pre>
+<p>对于获取首节点，由于只有一个线程能够成功获取到同步状态，因此设置头节点的方法并不需要使用CAS来保证</p>
+<h3 id="%E7%8B%AC%E5%8D%A0%E5%BC%8F%E5%90%8C%E6%AD%A5%E7%8A%B6%E6%80%81%E8%8E%B7%E5%8F%96%E4%B8%8E%E9%87%8A%E6%94%BE">独占式同步状态获取与释放</h3>
+<p>独占式同步状态获取流程</p>
+<p><img src="https://raw.githubusercontent.com/FameLsy/Images/master/thread/thread10.png" alt="thread10"></p>
+<p>同步器使用acquire()方法独占式获取同步状态，其逻辑步骤如下</p>
+<ol>
+<li>调用<em>自定义同步器</em>实现的tryAcquire(int arg)方法,该方法保证线程安全的获取同步状态</li>
+<li>如果同步状态获取失败，则构造同步节点(Node.EXCLUSIVE),并使用addWaiter(Node node)加入到队列尾部，然后调用acquireQueued(Node node,int arg)方法，使得该节点以“死循环”的方式获取同步状态</li>
+<li>以上两步均没有获取到同步状态，则阻塞节点中的线程，selfInterrupt();</li>
+</ol>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title">acquire</span><span class="hljs-params">(<span class="hljs-keyword">int</span> arg)</span> </span>{
+<span class="hljs-keyword">if</span> (!tryAcquire(arg) &amp;&amp; acquireQueued(addWaiter(Node.EXCLUSIVE), arg)){
+        selfInterrupt();
+    }
+}
+</div></code></pre>
+<p>同步器的addWaiter和enq方法</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">private</span> Node <span class="hljs-title">addWaiter</span><span class="hljs-params">(Node mode)</span> </span>{
+        <span class="hljs-comment">//创建节点</span>
+        Node node = <span class="hljs-keyword">new</span> Node(Thread.currentThread(), mode);
+        <span class="hljs-comment">//尾节点</span>
+        Node pred = tail;
+        <span class="hljs-comment">//尝试快速添加，可能由于多个请求并发进行而添加失败</span>
+        <span class="hljs-keyword">if</span> (pred != <span class="hljs-keyword">null</span>) {
+            <span class="hljs-comment">//尾节点设置为新节点的前驱节点</span>
+            node.prev = pred;
+            <span class="hljs-comment">//使用compareAndSetTail,确保节点能够被线程安全添加列尾</span>
+            <span class="hljs-keyword">if</span> (compareAndSetTail(pred, node)) {
+                pred.next = node;
+                <span class="hljs-keyword">return</span> node;
+            }
+        }
+        <span class="hljs-comment">//快速添加失败，进入死循环添加，将并发添加节点的请求通过CAS变得“串行化”</span>
+        enq(node);
+        <span class="hljs-keyword">return</span> node;
+    } 
+    <span class="hljs-comment">//通过“死循环”来保证节点的正确添加，CAS</span>
+    <span class="hljs-function"><span class="hljs-keyword">private</span> Node <span class="hljs-title">enq</span><span class="hljs-params">(<span class="hljs-keyword">final</span> Node node)</span> </span>{
+        <span class="hljs-keyword">for</span> (;;) {
+            Node t = tail;
+            <span class="hljs-keyword">if</span> (t == <span class="hljs-keyword">null</span>) { <span class="hljs-comment">// Must initialize</span>
+                <span class="hljs-keyword">if</span> (compareAndSetHead(<span class="hljs-keyword">new</span> Node()))
+                    tail = head;
+            } <span class="hljs-keyword">else</span> {
+                node.prev = t;
+                <span class="hljs-keyword">if</span> (compareAndSetTail(t, node)) {
+                    t.next = node;
+                    <span class="hljs-keyword">return</span> t;
+                }
+            }
+        }
+    }
+</div></code></pre>
+<p>同步器的acquireQueued方法</p>
+<pre class="hljs"><code><div><span class="hljs-comment">//在“死循环”中尝试获取同步状态，而只有 前驱节点 是头节点才能够尝试获取同步状态</span>
+    <span class="hljs-function"><span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">acquireQueued</span><span class="hljs-params">(<span class="hljs-keyword">final</span> Node node, <span class="hljs-keyword">int</span> arg)</span> </span>{
+        <span class="hljs-keyword">boolean</span> failed = <span class="hljs-keyword">true</span>;
+        <span class="hljs-keyword">try</span> {
+            <span class="hljs-keyword">boolean</span> interrupted = <span class="hljs-keyword">false</span>;
+            <span class="hljs-keyword">for</span> (;;) {
+                <span class="hljs-keyword">final</span> Node p = node.predecessor();
+                <span class="hljs-keyword">if</span> (p == head &amp;&amp; tryAcquire(arg)) {
+                    setHead(node);
+                    p.next = <span class="hljs-keyword">null</span>; <span class="hljs-comment">// help GC</span>
+                    failed = <span class="hljs-keyword">false</span>;
+                    <span class="hljs-keyword">return</span> interrupted;
+                }
+                <span class="hljs-keyword">if</span> (shouldParkAfterFailedAcquire(p, node) &amp;&amp;
+                        parkAndCheckInterrupt())
+                    interrupted = <span class="hljs-keyword">true</span>;
+            }
+        } <span class="hljs-keyword">finally</span> {
+            <span class="hljs-keyword">if</span> (failed)
+                cancelAcquire(node);
+        }
+    }
+</div></code></pre>
+<p>为什么只有前驱节点 是头节点才能够尝试获取同步状态？原因如下</p>
+<ol>
+<li>头节点是成功获取到同步状态的节点，而头节点的线程释放了同步状态之后，将会唤醒其后继节点，后继节点的线程被唤醒后需要检查自己的前驱节点是否是头节点</li>
+<li>维护同步队列的FIFO原则</li>
+</ol>
+<p>当同步状态获取成功之后，当前线程从acquire(int arg)方法返回，如果对于锁这种并发组件而言，代表着当前线程获取了锁</p>
+<p>当前线程获取同步状态并执行了相应逻辑之后，就需要释放同步状态，使得后续节点能够继续获取同步状态。通过调用同步器的release(int arg)方法可以释放同步状态，该方法在释放了同步状态之后，会唤醒其后继节点（进而使后继节点重新尝试获取同步状态）</p>
+<pre class="hljs"><code><div>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">release</span><span class="hljs-params">(<span class="hljs-keyword">int</span> arg)</span> </span>{
+        <span class="hljs-keyword">if</span> (tryRelease(arg)) {
+            Node h = head;
+            <span class="hljs-comment">//unparkSuccessor()使用LockSupport来唤醒处于等待状态的线程</span>
+            <span class="hljs-keyword">if</span> (h != <span class="hljs-keyword">null</span> &amp;&amp; h.waitStatus != <span class="hljs-number">0</span>)
+                unparkSuccessor(h);
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+        }
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+    }
+</div></code></pre>
+<h2 id="%E5%85%B1%E4%BA%AB%E5%BC%8F%E5%90%8C%E6%AD%A5%E7%8A%B6%E6%80%81%E8%8E%B7%E5%8F%96%E4%B8%8E%E9%87%8A%E6%94%BE">共享式同步状态获取与释放</h2>
+<p>与独占式的区别在于同一时刻能否有多个线程同时获取到同步状态，如对于同一份文件的读操作，对于共享式的访问均被允许，而独占式只能有一个被访问，其他的独占式访问均被拒绝</p>
+<p>同步器使用acquireShared(int arg)方法共享式获取同步状态，其逻辑步骤如下</p>
+<ol>
+<li>调用tryAcquireShared(int arg)方法尝试获取同步状态，返回int,大于等于0时，表示能够获取到同步状态,否则进入doAcquireShared()方法</li>
+<li>在doAcquireShared()方法中，如果当前节点的前驱为头节点时，尝试获取同步状态，如果返回值大于等于0，表示该次获取同步状态成功并从自旋过程中退出</li>
+</ol>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title">acquireShared</span><span class="hljs-params">(<span class="hljs-keyword">int</span> arg)</span> </span>{
+        <span class="hljs-keyword">if</span> (tryAcquireShared(arg) &lt; <span class="hljs-number">0</span>)
+            doAcquireShared(arg);
+    } 
+
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doAcquireShared</span><span class="hljs-params">(<span class="hljs-keyword">int</span> arg)</span> </span>{
+    <span class="hljs-keyword">final</span> Node node = addWaiter(Node.SHARED);
+    <span class="hljs-keyword">boolean</span> failed = <span class="hljs-keyword">true</span>;
+    <span class="hljs-keyword">try</span> {
+        <span class="hljs-keyword">boolean</span> interrupted = <span class="hljs-keyword">false</span>;
+        <span class="hljs-keyword">for</span> (;;) {
+            <span class="hljs-keyword">final</span> Node p = node.predecessor();
+            <span class="hljs-keyword">if</span> (p == head) {
+                <span class="hljs-keyword">int</span> r = tryAcquireShared(arg);
+                <span class="hljs-keyword">if</span> (r &gt;= <span class="hljs-number">0</span>) {
+                    setHeadAndPropagate(node, r);
+                    p.next = <span class="hljs-keyword">null</span>;
+                    <span class="hljs-keyword">if</span> (interrupted)
+                        selfInterrupt();
+                    failed = <span class="hljs-keyword">false</span>;
+                    <span class="hljs-keyword">return</span>;
+                }
+            }
+            <span class="hljs-keyword">if</span> (shouldParkAfterFailedAcquire(p, node) &amp;&amp;
+                    parkAndCheckInterrupt())
+                interrupted = <span class="hljs-keyword">true</span>;
+        }
+    } <span class="hljs-keyword">finally</span> {
+        <span class="hljs-keyword">if</span> (failed)
+            cancelAcquire(node);
+    }
+}
+
+</div></code></pre>
+<p>通过调用releaseShared(int arg)方法释放同步状态</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">releaseShared</span><span class="hljs-params">(<span class="hljs-keyword">int</span> arg)</span> </span>{
+    <span class="hljs-comment">//tryReleaseShared:必须确保同步状态（或者资源数）线程安全释放，一般是通过循环和CAS来保证,，因为释放同步状态的操作会同时来自多个线程。(独占式则不需要，因为是一个线程释放)</span>
+    <span class="hljs-keyword">if</span> (tryReleaseShared(arg)) {
+        doReleaseShared();
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+}
+</div></code></pre>
+<h3 id="%E7%8B%AC%E5%8D%A0%E5%BC%8F%E8%B6%85%E6%97%B6%E8%8E%B7%E5%8F%96%E5%90%8C%E6%AD%A5%E7%8A%B6%E6%80%81">独占式超时获取同步状态</h3>
+<p>独占式超时同步状态获取流程</p>
+<p><img src="https://raw.githubusercontent.com/FameLsy/Images/master/thread/thread11.png" alt="thread11"></p>
+<p>同步器通过调用doAcquireNanos(int arg,long nanosTimeout)方法可以超时获取同步状态，即在指定的时间段内获取同步状态，其逻辑如下</p>
+<ol>
+<li>主要需要计算出需要睡眠的时间间隔nanosTimeout，公式为：nanosTimeout-=now-lastTime（其中now为当前唤醒时间，lastTime为上次唤醒时间）</li>
+<li>如果nanosTimeout大于0则表示超时时间未到，需要重新计算超时间隔nanosTimeout，继续睡眠nanosTimeout纳秒，反之，表示已经超时</li>
+</ol>
+<pre class="hljs"><code><div><span class="hljs-comment">//当前唤醒时间</span>
+<span class="hljs-keyword">long</span> now = System.nanoTime();
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">doAcquireNanos</span><span class="hljs-params">(<span class="hljs-keyword">int</span> arg, <span class="hljs-keyword">long</span> nanosTimeout)</span>
+            <span class="hljs-keyword">throws</span> InterruptedException </span>{
+        <span class="hljs-comment">//上次唤醒时间</span>
+        <span class="hljs-keyword">long</span> lastTime = System.nanoTime();
+        <span class="hljs-keyword">final</span> Node node = addWaiter(Node.EXCLUSIVE);
+        <span class="hljs-keyword">boolean</span> failed = <span class="hljs-keyword">true</span>;
+        <span class="hljs-keyword">try</span> {
+            <span class="hljs-keyword">for</span> (;;) {
+                <span class="hljs-keyword">final</span> Node p = node.predecessor();
+                <span class="hljs-keyword">if</span> (p == head &amp;&amp; tryAcquire(arg)) {
+                    setHead(node);
+                    p.next = <span class="hljs-keyword">null</span>; <span class="hljs-comment">// help GC</span>
+                    failed = <span class="hljs-keyword">false</span>;
+                    <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+                }
+                <span class="hljs-comment">//-----------------重点-----------------------------</span>
+                <span class="hljs-keyword">if</span> (nanosTimeout &lt;= <span class="hljs-number">0</span>)
+                    <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+                <span class="hljs-keyword">if</span> (shouldParkAfterFailedAcquire(p, node)
+                        &amp;&amp; nanosTimeout &gt; spinForTimeoutThreshold)
+                    LockSupport.parkNanos(<span class="hljs-keyword">this</span>, nanosTimeout);
+                <span class="hljs-keyword">long</span> now = System.nanoTime();
+                <span class="hljs-comment">//计算时间，当前时间now减去睡眠之前的时间lastTime得到已经睡眠的时间delta，然后被原有超时时间nanosTimeout减去，得到了还应该睡眠的时间</span>
+                nanosTimeout -= now - lastTime;
+                lastTime = now;
+                <span class="hljs-keyword">if</span> (Thread.interrupted())
+                    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> InterruptedException();
+            }
+        <span class="hljs-comment">//-----------------------------------------------------------</span>
+
+        } <span class="hljs-keyword">finally</span> {
+            <span class="hljs-keyword">if</span> (failed)
+                cancelAcquire(node);
+        }
+    }
+</div></code></pre>
+<blockquote>
+<p>注意<br>
+如果nanosTimeout小于等于spinForTimeoutThreshold（1000纳秒）时，将不会使该线程进行超时等待，而是进入快速的自旋过程(非常短的超时等待无法做到十分精确)</p>
+</blockquote>
+
+</body>
+</html>
