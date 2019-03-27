@@ -1,56 +1,42 @@
----
+<!-- ---
 title: java基础：集合
 date: 2018-02-02 00:00:16
 tags: 
 - java集合
 categories: 
 - JavaSe教程
----
+--- -->
+
+Java集合类库是接口与实现分离的;此外，在*Java　API* 文档中，有一组以Abstract开头的类，如"AbstractQueue",这些类是为类库实现者设计的。（想要实现自己的队列，扩展AbstractQueue比实现Ｑueue轻松的多）
+
+# 集合框架中的接口
+
+![collection2](https://raw.githubusercontent.com/FameLsy/Images/master/javase/collection2.png)
 
 
-# 集合
 
-## Java集合框架概述
+# 集合结构结合泛型
 
-### 集合和接口分离
-Java集合类库是接口与实现分离的。  
-以队列(queue)为例,队列接口的最简形式可能如下
+Ｃollection和Iterator都是泛型接口，这意味着可以编写任何集合类型的使用方法  
+如下方法就可以检测任意集合是否包含指定元素的泛型方法
+
 ```java
-public interface Queur<E>{
-    void add(E element);
-    E remove();
-    int size();
+public static <E> boolean comtains(Collection<E> c, Object obj){
+    for(E element : c){
+        if(element.equals(obj)) return ture;
+    }
+    return false;
 }
 ```
-接口没有说明队列该如何实现，而通常，有两种实现方式：循环数组和链表形式。
-```java
-// 循环数组形式实现队列
-public class CircularArrayQueue<E> implements Queue<E>{
-    private int head;
-    private int tail;
-    private E[] elements;
-    CircularArrayQueue(int capacity){...}
-    public void add(E element){...};
-    public E remove(){...};
-    public int size(){...};
-}
-// 　链表形式实现队列
-public class LinkedArrayQueue<E> implements Queue<E>{
-    private Link head;
-    private LInk tail;
-    public void add(E element){...};
-    public E remove(){...};
-    public int size(){...};
-}
-```
-当然，以上两个类实际并不存在，主要用于解释接口与实现。
 
-在Java　API文档中，有一组以Abstract开头的类，如"AbstractQueue",这些类是为类库实现者设计的。（想要实现自己的队列，扩展AbstractQueue比实现Ｑueue轻松的多）
+Collection 已经声明了很多有用的抽象方法　　
+![collection](https://raw.githubusercontent.com/FameLsy/Images/master/javase/collection.png)
 
-### Collection　接口
+# Collection接口
+
 集合的最基本接口就是Ｃollection接口,且有两个基本方法
 ```java
-public interface Collection<E>{
+public interface Collection<E>  extends Iterable<E>{
     // 向集合添加元素
     boolean add(E element);
     // 返回迭代器
@@ -59,7 +45,10 @@ public interface Collection<E>{
 }
 ```
 
-### 迭代器
+# 迭代器
+
+迭代器虽然不是集合，但是他能作用于任何继承Iterable的集合上，而Collection正是继承了这个类。
+
 Iterator是一个接口，包含４个方法
 ```java
 public interface Iterator<E>{
@@ -73,7 +62,12 @@ public interface Iterator<E>{
     default void forEachRemaining(Consumer<? super E> action);
 }
 ```
-**查看所有元素**
+
+## 迭代器遍历
+
+遍历一个元素，可以使用迭代器来完成,有两种使用方式
+1. 通过hasnext()和next()方法进行遍历
+2. 通过for-earch循环来完成
 ```java
 Collection<String> aCollection = ...;
 Iterator<String> iter = aCollection.iterator();
@@ -82,99 +76,91 @@ while(iter.hasnext()){
     String element = iter.next();
     //do something with element
 }
-// 使用for-each循环
+// 使用for-each循环遍历
 for(String element : aCollection){
      //do something with element
 }
 ```
-对于for-each循环，编译器会把它认为是带有迭代器的循环。
 
->注  
->for each 循环可以与任何实现了Iterable接口的对象一起工作，而Collction接口扩展了Ｉterable接口，这就意味着所有接都可以使用ｆor each循环
+*for-each* 循环可以与任何实现了 *Iterable* 接口的对象一起工作，而 *Collction* 接口扩展了 *Iterable* 接口，这就意味着所有集合都可以使用 *for-each* 循环
 
-在Java SE 8,可以通过调用forEachRemaining()方法来完成查看所有元素,它将会对迭代器里的每个元素调用lambda表达式，直到没有为止。
+此外，在Java SE 8,可以通过调用 *forEachRemaining()* 方法来完成查看所有元素,它将会对迭代器里的每个元素调用lambda表达式，直到没有为止。
+
 ```java
 iter.forEachRemaining(element -> do something with element)
 ```
-**迭代顺序**  
-元素的迭代顺序取决于集合类型。
 
-**迭代器删除元素**  
-对于使用remove()方法，必须先使用一次next()方法(删除上一个ｎｅｘｔ的返回值)
+## 迭代器删除
+
+对于使用remove()方法，必须先使用一次next()方法(删除上一个next的返回值),这点要额外注意
+
 ```java
 iter.next();
 iter.remove(); //ok
 iter.remove();//error
 ```
 
-### 接口结合泛型
-Ｃollection和Iterator都是泛型接口，这意味着可以编写任何集合类型的使用方法  
-如下方法就可以检测任意集合是否包含指定元素的泛型方法
+# List、Set、Queue
+
+List接口是一个有序集合，元素会添加到容器中的特定位置，可采用迭代器访问和整数索引访问(又被称为 *随机访问* )
+
+Set接口类似与Connection,但是对方法的行为更为严谨。容器不能添加重复元素，需要定义equals方法和hashCode()方法
+
+Queue: 队列结构
+
+# Collection 具体集合
+
+
+![collection3](https://raw.githubusercontent.com/FameLsy/Images/master/javase/collection3.png)
+
+说明
+
+![collection4](https://raw.githubusercontent.com/FameLsy/Images/master/javase/collection4.png)
+
+
+## LinkedList 源码解析
+
+todo
+
+## AarrayList 源码解析
+
+从类的定义可以看出，该类继承于AbstractList，可以随机访问、克隆、序列化
 ```java
-public static <E> boolean comtains(Collection<E> c, Object obj){
-    for(E element : c){
-        if(element.equals(obj)) return ture;
+public class ArrayList<E> extends AbstractList<E>
+        implements List<E>, RandomAccess, Cloneable, java.io.Serializable
+```
+
+再来看它的属性
+```java
+    //默认的初始化大小
+    private static final int DEFAULT_CAPACITY = 10;
+
+    //一个空的数组
+    private static final Object[] EMPTY_ELEMENTDATA = {};
+
+    //用于默认大小的空数组
+    private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
+
+    
+    //存储ArrayList元素的数组缓冲区。
+    transient Object[] elementData;
+
+    //集合大小
+    private int size;
+
+```
+
+添加方法
+
+```java
+    public boolean add(E e) {
+        ensureCapacityInternal(size + 1);  
+        elementData[size++] = e;
+        return true;
     }
-    return false;
-}
+//
+  private void ensureCapacityInternal(int minCapacity) {
+        ensureExplicitCapacity(calculateCapacity(elementData, minCapacity));
+    }
 ```
 
-Collection 已经声明了很多有用的方法　　
-![Collection]
-
-### 集合框架中的接口
-如下图
-![集合框架中的接口]
-
-最基本的两个接口：Ｃollection 和 Ｍａｐ  
-
-**List**  
-有序集合,可以采用两种方式访问元素
-1. 使用迭代器访问
-2. 使用一个整数索引来访问（又叫随机访问）
-
-**Set**  
-等同于Colltion接口，区别是
-1. 方法行为更严谨
-2. Set的add方法不允许添加重复的元素
-3. 要适当定义equals方法  
-    两个Ｓｅｔ包含元素相同，就认为相等  
-    hashCode方法保证相同元素的两个Ｓｅｔ会得到相同的散列码
-
-**ListIterator接口**  
-Iterator的子接口，定义了一个用于在迭代器位置前面增加一个元素的方法;
-```java
-void add(E element)
-```
-
-**RandomAccess**  
-Java SE 1.4 引入的标记接口(不包含任何方法)，可以用来测试一个特定的集合是否支持高效的随机访问。
-```java
-if(c instanceof RandomAccess)
-```
-
-**SortedSet 和 SortedMap 接口**  
-可以提供用于排序的比较器对象，定义了可以得到集合子集视图的方法。
-
-**NavigableSet 和 NavigableMap**  
-JavaＳＥ 6添加，包含一些用于搜索和遍历有序集和映射的方法
-
-## 具体的集合实现
-![具体集合]　　
-![集合框架中的类]
-
-图中除Map结尾的类之外，都实现了Collection接口
-
-## Collecion实现
-### linkedList 链表
-### ArrayList　数组列表
-### HashSet　散列集
-### TreeSet　树集
-### Queue和Deque接口　队列和双端队列接口
-### PriorityQueue　优先队列
-
-## Map实现
-
-# 并发
-## 线程
-多进程与多线程的区别：本质的区别在于每个进程拥有自己的一整套变量, 而线程则共享数据
