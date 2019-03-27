@@ -1,219 +1,145 @@
-<!-- Java中的阻塞队列 -->
-
-# 阻塞队列（BlockingQueue）
-
-阻塞队列（BlockingQueue）是一个支持两个附加操作的队列。这两个附加的操作支持阻塞
-的插入和移除方法。
-1. 支持阻塞的插入方法：意思是当队列满时，队列会阻塞插入元素的线程，直到队列不满
-2. 支持阻塞的移除方法：意思是在队列为空时，获取元素的线程会等待队列变为非空
-3. 常用于生产者和消费者的场景
-
-在阻塞队列不可用时，这两个附加操作提供了4种处理方式
-1. 抛出异常：队列满，再往队列里插入元素，会抛出IllegalStateException（"Queuefull"）异常；队列空，当队列空时，从队列里获取元素会抛出NoSuchElementException异常
-2. 返回特殊值：当往队列插入元素时，会返回元素是否插入成功，成功返回true。如果是移除方法，则是从队列里取出一个元素，如果没有则返回null
-3. 一直阻塞：队列满，如果生产者线程往队列里put元素，队列会一直阻塞生产者线程，直到队列可用或者响应中断退出。当队列空时，如果消费者线程从队列里take元素，队列会阻塞住消费者线程，直到队列不为空
-5. ·超时退出：队列满，如果生产者线程往队列里插入元素，队列会阻塞生产者线程一段时间，如果超过了指定的时间，生产者线程就会退出；队列空，抛出元素，队列会阻塞生产者线程一段时间，如果超过了指定的时间，生产者线程就会退出
 
 
-![BlockingQueue](https://raw.githubusercontent.com/FameLsy/Images/master/thread/BlockingQueue.png)
+<!-- # Java中的锁 -->
 
->注意
->如果是无界阻塞队列，队列不可能会出现满的情况，所以使用put或offer方法永远不会被阻塞，而且使用offer方法时，该方法永远返回true。
+锁能够防止多个线程同时访问共享资源.但有些锁可以允许多个线程并发的访问共享资源，比如读写锁
 
-# Java里的阻塞队列
 
-JDK 7提供了7个阻塞队列
-1. ArrayBlockingQueue：一个由数组结构组成的有界阻塞队列。
-2. LinkedBlockingQueue：一个由链表结构组成的有界阻塞队列。
-3. PriorityBlockingQueue：一个支持优先级排序的无界阻塞队列。
-4. DelayQueue：一个使用优先级队列实现的无界阻塞队列。
-5. SynchronousQueue：一个不存储元素的阻塞队列。
-6. LinkedTransferQueue：一个由链表结构组成的无界阻塞队列。
-7. LinkedBlockingDeque：一个由链表结构组成的双向阻塞队列。
+# Lock 接口
 
-## ArrayBlockingQueue
+Java SE 5之后，并发包中新增了Lock接口,在使用时需要显式地获取和释放锁。
 
-ArrayBlockingQueue:
-- 由数组结构组成的有界阻塞队列
-- 此队列按照先进先出（FIFO）的原则对元素进行排序
-- 默认不保证线程公平的访问队列
+>注意  
+>不要将获取锁的过程写在try块中，因为如果在获取锁（自定义锁的实现）时发生了异常，异常抛出的同时，也会导致锁无故释放
 
-创建一个公平的阻塞队列(即先阻塞先访问)
+Lock接口提供的synchronized关键字不具备的主要特性
+
+![thread4](https://raw.githubusercontent.com/FameLsy/Images/master/thread/thread4.png)
+
+Lock的API
+
+![thread5](https://raw.githubusercontent.com/FameLsy/Images/master/thread/thread5.png)
+
+# 重入锁(ReentrantLock)
+
+支持重进入的锁，它表示该锁能够支持一个线程对资源的重复加锁。
+
+为什么要用到重入锁，如下场景
+1. 线程A通过aLock.lock()获取了锁
+2. 锁未被释放，线程A再次aLock.lock()获取锁，此时将无法获取，导致自己被自己阻塞
+
+
+除此之外，该锁的还支持获取锁时的公平和非公平性选择
+1. 公平性：锁获取是顺序的，先请求锁的先获取锁
+2. 非公平性: 效率比公平性锁高
+
+## 实现重进入
+
+线程在获取到锁之后能够再次获取该锁而不会被锁所阻塞,需要解决两个问题
+1. 线程再次获取锁,判断当前线程是否为锁的占有者，是，则获取成功
+2. 锁的最终释放,利用计数器记录锁获取的次数，每次释放时计数器自减，当为0时表示锁成功释放
+
+ReentrantLock默认为以非公平性实现
 ```java
-ArrayBlockingQueue fairQueue = new ArrayBlockingQueue(1000,true);
-```
-访问者的公平性是使用可重入锁实现的
-```java
-public ArrayBlockingQueue(int capacity, boolean fair) {
-    if (capacity <= 0)
-        throw new IllegalArgumentException();
-    this.items = new Object[capacity];
-    lock = new ReentrantLock(fair);
-    notEmpty = lock.newCondition();
-    notFull = lock.newCondition();
-}
-```
-
-## LinkedBlockingQueue
-
-LinkedBlockingQueue
-- 用链表实现的有界阻塞队列
-- 默认和最大长度为Integer.MAX_VALUE
-- FIFO
-
-## PriorityBlockingQueue
-
- PriorityBlockingQueue
-- 支持优先级的无界阻塞队列
-- 默认情况下元素采取自然顺序升序排列
-- 可以自定义类实现compareTo()方法来指定元素排序规则;也可以初始化PriorityBlockingQueue时，指定构造参数Comparator来对元素进行排序
-- 但不能保证同优先级元素的顺序
-
-## DelayQueue
-
-DelayQueue
-- 支持延时获取元素的无界阻塞队列
-- 使用PriorityQueue来实现，
-- 队列中的元素必须实现Delayed接口
-- 在创建元素时可以指定多久才能从队列中获取当前元素。只有在延迟期满时才能从队列中提取元素。
-
-应用场景
-- 缓存系统的设计：可以用DelayQueue保存缓存元素的有效期，使用一个线程循环查询DelayQueue，一旦能从DelayQueue中获取元素时，表示缓存有效期到了。
-- 定时任务调度：使用DelayQueue保存当天将会执行的任务和执行时间，一旦从DelayQueue中获取到任务就开始执行，比如TimerQueue就是使用DelayQueue实现的。
-
-### 实现Delayed接口
-
-步骤如下
-1. 在对象创建的时候，初始化基本数据
-
-```java
-private static final AtomicLong sequencer = new AtomicLong(0);
-ScheduledFutureTask(Runnable r, V result, long ns, long period) {
-    super(r, result);
-    this.time = ns;//time记录当前对象延迟到什么时候可以使用
-    this.period = period;
-    this.sequenceNumber = sequencer.getAndIncrement();//sequenceNumber来标识元素在队列中的先后顺序
-}
-```
-
-2. 实现getDelay方法
-
-```java
-//该方法返回当前元素还需要延时多长时间，单位是纳秒(注意当time小于当前时间时，getDelay会返回负数)
-public long getDelay(TimeUnit unit) {
-    return unit.convert(time - now(), TimeUnit.NANOSECONDS);
-}
-```
-
-3. 实现compareTo方法来指定元素的顺序
-
-```java
-public int compareTo(Delayed other) {
-        if (other == this)　　// compare zero ONLY if same object
-        return 0;
-        if (other instanceof ScheduledFutureTask) {
-            ScheduledFutureTask<> x = (ScheduledFutureTask<>)other;
-            long diff = time - x.time;
-            if (diff < 0)
-                return -1;
-            else if (diff > 0)
-                return 1;
-            else if (sequenceNumber < x.sequenceNumber)
-                return -1;
-            else
-                return 1;
+//获取锁
+//判断当前线程是否为获取锁的线程来决定获取操作是否成功
+//重复获取只是添加了同步状态值
+final boolean nonfairTryAcquire(int acquires) {
+    final Thread current = Thread.currentThread();
+    int c = getState();
+    if (c == 0) {
+        if (compareAndSetState(0, acquires)) {
+            setExclusiveOwnerThread(current);
+            return true;
         }
-        long d = (getDelay(TimeUnit.NANOSECONDS) -
-                other.getDelay(TimeUnit.NANOSECONDS));
-        return (d == 0) 0 : ((d < 0) -1 : 1);
+    } else if (current == getExclusiveOwnerThread()) {//通过判断当前线程是否跟获取锁的线程是同一个线程
+        int nextc = c + acquires;
+        if (nextc < 0)
+            throw new Error("Maximum lock count exceeded");
+        //则将同步状态值进行增加并返回true,表示获取成功,相当于成功获取锁的线程再次获取锁，只是增加了同步状态值
+        setState(nextc);
+        return true;
     }
-```
-
-### 实现延时阻塞队列
-
-```java
-//从队列里获取元素时，如果元素没有达到延时时间，就阻塞当前线程
-
-long delay = first.getDelay(TimeUnit.NANOSECONDS);
-if (delay <= 0)
-    return q.poll();
-//leader：等待获取队列头部元素的线程
-//如果leader不等于空，表示已经有线程在等待获取队列的头元素,使用await()方法让当前线程等待信号
-else if (leader != null)
-    available.await();
-else {
-    //leader等于空，则把当前线程设置成leader，并使用awaitNanos()方法让当前线程等待接收信号或等待delay时间
-    Thread thisThread = Thread.currentThread();
-    leader = thisThread;
-    try {
-        available.awaitNanos(delay);
-    } finally {
-        if (leader == thisThread)
-            leader = null;
+    return false;
+}
+//释放锁
+//前n-1次方法必定返回false，只有同步状态为0时，才返回true
+protected final boolean tryRelease(int releases) {
+    int c = getState() - releases;
+    if (Thread.currentThread() != getExclusiveOwnerThread())
+        throw new IllegalMonitorStateException();
+    boolean free = false;
+    if (c == 0) {
+        free = true;
+        setExclusiveOwnerThread(null);
     }
+    setState(c);
+    return free;
 }
 ```
 
-## SynchronousQueue
-
-SynchronousQueue
-- 不存储元素的阻塞队列
-- 每一个put操作必须等待一个take操作，否则不能继续添加元素
-- 支持公平访问队列,默认非公平访问
-- 非常适合传递性场景
-- 吞吐量高于LinkedBlockingQueue和ArrayBlockingQueue
-
-创建公平性访问的SynchronousQueue
+ReentrantLock公平性实现
 ```java
-//fair == true -> 公平访问
-public SynchronousQueue(boolean fair) {
-    transferer = fair ? new TransferQueue() : new TransferStack();
+//区别在于判断条件多了hasQueuedPredecessors(),判断出当前线程所对应的节点是否有前驱节点，如果有，则返回true
+//也就是说，只有前驱线程获取并释放锁之后才能继续获取锁
+protected final boolean tryAcquire(int acquires) {
+    final Thread current = Thread.currentThread();
+    int c = getState();
+    if (c == 0) {
+        if (!hasQueuedPredecessors() && compareAndSetState(0, acquires)) {
+            setExclusiveOwnerThread(current);
+            return true;
+        }
+    } else if (current == getExclusiveOwnerThread()) {
+        int nextc = c + acquires;
+        if (nextc < 0)
+            throw new Error("Maximum lock count exceeded");
+        setState(nextc);
+        return true;
+    }
+    return false;
 }
+
+//AQS中的方法
+public final boolean hasQueuedPredecessors() {
+
+        Node t = tail; 
+        Node h = head;
+        Node s;
+        //判断头节点和尾节点是否是同一节点，如果h == t,说明同步队列没有节点，肯定没有前驱节点
+        // 第二步判断，如果头节点的后继节点为空(只有一个节点，自然没有前驱节点) 或者 有后继节点但判断后继节点对应的线程是否是当前线程
+        //通过三个判断来判断出当前线程的是否是下一个需要执行的
+        return h != t &&
+            ((s = h.next) == null || s.thread != Thread.currentThread());
+    }
 ```
 
-## LinkedTransferQueue
+非公平性锁的一个线程连续获取锁的情况  
+- 原因为刚释放锁的线程再次获取同步状态的几率会非常大，使得其他线程只能在同步队列中等待,可能造成线程饥饿（使得其他线程只能在同步队列中等待）
 
-LinkedTransferQueue
-- 由链表结构组成的无界阻塞TransferQueue队列
-- 相对于其他阻塞队列，LinkedTransferQueue多了tryTransfer和transfer方法。
+为什么非公平锁为默认？
+- 公平锁锁保证了锁的获取按照FIFO原则，而代价是进行大量的线程切换。非公平性锁虽然可能造成线程“饥饿”，但极少的线程切换，保证了其更大的吞吐量。
 
-### transfer方法
+# 读写锁
 
-transfer方法
-- 如果当前有消费者正在等待接收元素（消费者使用take()方法或带时间限制的poll()方法时），transfer方法可以把生产者传入的元素立刻transfer（传输）给消费者;。如果没有消费者在等待接收元素，transfer方法会将元素存放在队列的tail节点，并等到该元素被消费者消费了才返回
+读写锁在同一时刻可以允许多个读线程访问，但是在写线程访问时，所有的读线程和其他写线程均被阻塞;读写锁维护了一对锁，一个读锁和一个写锁，通过分离读锁和写锁，使得并发性相比一般的排他锁有了很大提升
 
-关键代码
-```java
-//尝试把存放当前元素的s节点作为tail节点
-Node pred = tryAppend(s, haveData);
-//让CPU自旋等待消费者消费元素（自旋会消耗CPU，所以自旋一定的次数后使用Thread.yield()方法来暂停当前正在执行的线程，并执行其他线程。）
-return awaitMatch(s, pred, e, (how == TIMED), nanos);
-```
+java 5.0之前是如何做的?
+- 使用Java的等待通知机制
+- 写操作开始，其他读操作等待，直到通知(防止幻读)
 
-### tryTransfer方法
+有了读写锁后怎么做？
+- 读操作，获取读锁
+- 写操作，获取写锁,后续其他线程读写操作均被阻塞
 
-用来试探生产者传入的元素是否能直接传给消费者
-- 如果没有消费者等待接收元素，则返回false
-- 如果消费了元素，则返回true
-- 该方法无论消费者是否接收，方法立即返回；，而transfer方法是必须等到消费者消费了才返回
+## ReentrantReadWriteLock
 
-此外还有带有时间限制的tryTransfer（E e，long timeout，TimeUnit unit）方法
-- 试图把生产者传入的元素直接传给消费者
-- 如果没有消费者消费该元素则等待指定的时间再返回，如果超时还没消费元素，则返回false
-- 如果在超时时间内消费了元素，则返回true。
+Java并发包提供读写锁的实现是ReentrantReadWriteLock,其特性如下
 
-## LinkedBlockingDeque
+![lock](https://raw.githubusercontent.com/FameLsy/Images/master/thread/lock.png)
 
-LinkedBlockingDeque
-- 由链表结构组成的双向阻塞队列
-- 因为多了一个操作队列的入口，在多线程同时入队时，也就减少了一半的竞争
-- 相比其他的阻塞队列，LinkedBlockingDeque多了addFirst、addLast、offerFirst、offerLast、peekFirst和peekLast等方法
-- 在初始化LinkedBlockingDeque时可以设置容量防止其过度膨胀。
-- 双向阻塞队列可以  运用在“工作窃取”模式中。
+ReadWriteLock仅定义了获取读锁和写锁的两个方法，即readLock()方法和writeLock()方法，而ReentrantReadWriteLock，还提供了一些便于外界监控其内部工作状态的方法
 
-# 阻塞队列的实现原理
+![lock2](https://raw.githubusercontent.com/FameLsy/Images/master/thread/lock2.png)
 
-在JDK中，使用通知模式实现;所谓通知模式，就是当生产者往满的队列里添加元素时会阻塞住生产者，当消费者消费了一个队列中的元素后，会通知生产者当前队列可用
-
-todo
-
+读写锁的实现分析

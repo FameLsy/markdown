@@ -1,114 +1,141 @@
-<!-- Executor框架 -->
+<!-- ConcurrentHashMap -->
 
-在JDK 5之前，java线程既是工作单元，也是执行机制，JDK 5之后把工作单元与执行机制分离开来。工作单元包括Runnable和Callable，而执行机制由Executor框架提供,其内部使用了线程池机制,通过该框架来控制线程的启动、执行和关闭，可以简化并发编程的操作
+　为什么要使用ConcurrentHashMap？
+1. 线程不安全的HashMap会引起死循环
+2. 用线程安全的HashTable效率又非常低下（线程都竞争同一把锁）
+3. java 1.8中的CurrentHashMap有了较大的不同（以下介绍的是java 7 的版本）
 
+[HashMap会引起死循环](https://juejin.im/post/5a66a08d5188253dc3321da0)
 
+ConcurrentHashMap的锁分段技术
+- 数据分段存储，并为每段数据配锁
+- 当一个线程占用锁访问其中一个段数据的时候，其他段的数据也能被其他线程访问。
 
+concurrentHashMap类图
+1. 由Segment数组结构和HashEntry数组结构组成
+2. Segment是一种可重入锁（ReentrantLock）,包含一个HashEntry数组
+3. HashEntry则用于存储键值对数据
+4. 当对HashEntry数组的数据进行修改时，必须首先获得与它对应的Segment锁
 
+![concurrentHashMap](https://raw.githubusercontent.com/FameLsy/Images/master/thread/concurrentHashMap.png)
 
-# Executor框架的两级调度模型
+# ConcurrentHashMap的初始化
 
-在HotSpot VM的线程模型中，Java线程（java.lang.Thread）被一对一映射为本地操作系统线
-程。
+ConcurrentHashMap初始化方法是通过initialCapacity、loadFactor和concurrencyLevel等几个参数来初始化segment数组、段偏移量segmentShift、段掩码segmentMask和每个segment里的HashEntry数组来实现的
 
-如图所示
-- 上层：ava多线程程序通常把应用分解为若干个任务，然后使用用户级的调度器（Executor框架）将这些任务映射为固定数量的线程
-- 底层：操作系统内核将这些线程映射到硬件处理器CPU上
-
-![executor](https://raw.githubusercontent.com/FameLsy/Images/master/thread/executor.png)
-
-# Executor框架的成员
-
-## ThreadPoolExecutor
-
-ThreadPoolExecutor：
-- 线程池的核心实现类
-- 用来执行被提交的任务。
-- 通常使用工厂类Executors来创建
-
-ThreadPoolExecutor主要由下列4个组件构成。
-1. corePool：核心线程池的大小。
-2. maximumPool：最大线程池的大小。
-3. BlockingQueue：用来暂时保存任务的工作队列
-4. RejectedExecutionHandler：当ThreadPoolExecutor已经关闭或ThreadPoolExecutor已经饱和时（达到了最大线程池大小且工作队列已满），execute()方法将要调用的Handler
-
-Executors可以创建3种类型的ThreadPoolExecutor
-1. FixedThreadPool：创建使用固定线程数的FixedThreadPool(适用于负载比较重的服务器)
-2. SingleThreadExecutor：创建使用单个线程的SingleThreadExecutor（适用于需要保证顺序地执行各个任务；并且在任意时间点，不会有多个线程是活动的应用场景。）
-3. CachedThreadPoo：创建一个会根据需要创建新线程的CachedThreadPool（大小无界线程池，适用于执行很多的短期异步任务的小程序，或者是负载较轻的服务器。）
-
-
-### FixedThreadPool
+## 初始化segments数组、segmentShift和segmentMask
 
 ```java
-public static ExecutorService newFixedThreadPool(int nThreads) {
-    return new ThreadPoolExecutor(
-                nThreads, 
-                nThreads,
-                0L, //keepAliveTime设置为0L，意味着多余的空闲线程会被立即终止
-                TimeUnit.MILLISECONDS, 
-                new inkedBlockingQueue<Runnable>());
+if (concurrencyLevel > MAX_SEGMENTS)
+    concurrencyLevel = MAX_SEGMENTS;
+int sshift = 0;
+//segments长度
+int ssize = 1;
+//计算出一个大于或等于concurrencyLevel的最小的2的N次方值来作为segments数组的长度 (为了能通过按位与的散列算法来定位segments数组的索引)
+while (ssize < concurrencyLevel) {
+    ++sshift;//ssize从1向左移位的次数
+    ssize <<= 1;
+}
+//初始化
+segmentShift = 32 - sshift;//用于定位参与散列运算的位数（之所以用32是因为ConcurrentHashMap里的hash()方法输出的最大数是32位的）
+segmentMask = ssize - 1;//散列运算的掩码（掩码的二进制各个位的值都是1）
+this.segments = Segment.newArray(ssize);
+```
+
+>注意  
+>concurrencyLevel的最大值是65535，这意味着segments数组的长度最大为65536，对应的二进制是16位;所以segmentShift最大值是16，segmentMask最大值是65535，对应的二进制是16位，每个位都是1
+
+## 初始化每个segment
+
+segment的容量 threshold = （int）cap*loadFactor
+```java
+//initialCapacity是ConcurrentHashMap的初始化容量,默认16 
+if (initialCapacity > MAXIMUM_CAPACITY)
+    initialCapacity = MAXIMUM_CAPACITY;
+int c = initialCapacity / ssize;
+if (c * ssize < initialCapacity)
+    ++c;
+int cap = 1;//变量cap就是segment里HashEntry数组的长度,大小为2^c [c∈(0,n)]
+while (cap < c)
+    cap <<= 1;
+for (int i = 0; i < this.segments.length; ++i)
+    this.segments[i] = new Segment<K,V>(cap, loadFactor);//，loadfactor是每个segment的负载因子，默认0.75
+```
+
+
+# 定位Segment
+
+然ConcurrentHashMap在插入和获取元素的时候，必须先通过散列算法定位到Segment,才能使用不同段的数据
+
+到ConcurrentHashMap会首先使用Wang/Jenkins hash的变种算法对元素的hashCode进行一次再散列
+
+```java
+private static int hash(int h) {
+    h += (h << 15) ^ 0xffffcd7d;
+    h ^= (h >>> 10);
+    h += (h << 3);
+    h ^= (h >>> 6);
+    h += (h << 2) + (h << 14);
+    return h ^ (h >>> 16);
 }
 ```
-### SingleThreadExecutor
 
-### CachedThreadPool
-
-## ScheduledThreadPoolExecutor
-
-ScheduledThreadPoolExecutor
-- 线程池实现类
-- 可以在给定的延迟后运行命令，或者定期执行命令
-- 通常使用工厂类Executors来创建
-
-Executors可以创建2种类型的ScheduledThreadPoolExecutor
-1. ScheduledThreadPoolExecutor：，创建固定个数线程的ScheduledThreadPoolExecutor(适用于需要多个后台线程执行周期任务，同时为了满足资源管理的需求而需要限制后台线程的数量的应用场景)
-2. SingleThreadScheduledExecutor：创建单个线程的ScheduledThreadPoolExecutor(适用于需要单个后台线程执行周期任务，同时需要保证顺序地执行各个任务的应用场景。)
-
-## Future接口和实现Future接口的FutureTask类
-
-Future接口和实现Future接口的FutureTask类
-- 表示异步计算的结果
-- 通过sumbit()提交给线程池后返回该类型的数据
-
-
-## Runnable接口和Callable接口
-
-Runnable接口和Callable接口
-- 可以被ThreadPoolExecutor或Scheduled-ThreadPoolExecutor执行
-- Runnable不会返回结果
-- Callable可以返回结果
-- 工具类Executors可以把一个Runnable对象封装为一个Callable对象
-
+ConcurrentHashMap通过以下散列算法定位segment
 ```java
-//Runnable->Callable
-// sumbit后返回null
-Executors.callable（Runnable task）
-// sumbit 后返回result
-Executors.callable（Runnable task，Object result）
-```
-任务的执行：  
-
-
-# Executor框架的使用
-
-示意图
-
-![executor2](https://raw.githubusercontent.com/FameLsy/Images/master/thread/executor2.png)
-
-执行流程
-1. 主线程创建实现Runnable或者Callable接口的任务对象
-2. Runnable对象直接交给ExecutorService执行;或者把Runnable对象或Callable对象提交给ExecutorService执行
-
-```java
-//直接执行
-ExecutorService.execute（Runnablecommand）;
-//提交,会返回实现Future接口的对象（一般是FutureTask对象）
-//FutureTask实现了Runnable，程序员也可以创建FutureTask，然后直接交给ExecutorService执行。
-Executor-Service.submit（Runnable task）
-ExecutorService.submit（Callable<T>task）
+//默认情况下segmentShift为28，segmentMask为15，再散列后的数最大是32位二进制数据，向右无符号移动28位，意思是让高4位参与到散列运算中
+final Segment<K,V> segmentFor(int hash) {
+    return segments[(hash >>> segmentShift) & segmentMask];
+}
 ```
 
-3. 主线程可以执行FutureTask.get()方法来等待任务执行完成。主也可以执行FutureTask.cancel（boolean mayInterruptIfRunning）来取消此任务的执行。
+此外，定位HashEntry所使用的hash算法如下
+```java
+int index = hash & (tab.length - 1);　
+```
 
-# 
+
+# ConcurrentHashMap的操作 
+
+ConcurrentHashMap的3种操作
+1. get操作
+2. put操作
+3. size操作
+
+## get操作
+
+get操作的高效之处在于整个get过程不需要加锁，除非读到的值是空才会加锁重读
+
+```java
+public V get(Object key) {
+    //先进行一次再散列
+    int hash = hash(key.hashCode());
+    //再使用使用这个散列值通过散列运算定位到Segment，再通过散列算法定位到元素
+    return segmentFor(hash).get(key, hash);
+}
+```
+
+为什么get方法不用加锁？
+- 是它的get方法里将要使用的共享变量都定义成了volatile类型
+- 根据ava内存模型的happen before原则，对volatile字段的写入操作先于读操作
+
+
+## put 操作
+
+put方法里需要对共享变量进行写入操作，在操作共享变量时必须加锁，其逻辑如下
+1. 首先定位到Segment，然后在Segment里进行插入操作
+2. 第一步判断是否需要对Segment里的HashEntry数组进行扩容(在插入元素前会先判断Segment里的HashEntry数组是否超过容量（threshold）)
+3. 第二步定位添加元素的位置，然后将其放在HashEntry数组里
+
+如何扩容?
+- 创建一个容量是原来容量两倍的数组，然后将原数组里的元素进行再散列后插入到新的数组里(对Segment的扩容)
+
+## size操作
+
+要计算CurrentHashMap的大小，需要将Segment里的全局变量count累计相加，count是一个volatile变量，在获取时将得到最新的数据，但在计算相加前可能发生改变。
+
+ConcurrentHashMap的做法如下
+- 先尝试2次通过不锁住Segment的方式来统计各个Segment大小
+- 如果果统计的过程中，容器的count发生了变化，则再采用加锁的方式来统计所有Segment的大小
+- 通过使用modCount变量，在put、remove和clean方法里操作元素前都会将变量modCount进行加1，在统计size前后比较modCount是否发生变化，从而得知容器的大小是否发生变化
+
+

@@ -108,15 +108,11 @@ if (compareAndSetTail(t, node)) {
 
 ## 独占式同步状态获取与释放
 
-
-
 独占式同步状态获取释放流程
 
 ![thread10](https://raw.githubusercontent.com/FameLsy/Images/master/thread/thread10.png)
 
 ### 获取流程
-
-
 
 源码:AQS通过模板方法acquire()方法来进行独占式的同步状态获取，获取成功，则由该方法返回；失败，则进入等待队列
 
@@ -129,7 +125,7 @@ if (compareAndSetTail(t, node)) {
     }
 ```
 
-对于tryAcquire(int arg)方法，它是同步器自定义的获取同步状态的方法,如果不重写，原方法只是抛出一个UnsupportedOperationException
+对于tryAcquire(int arg)方法，它是同步器自定义的获取同步状态的方法,如果不重写，原方法只是抛出一个UnsupportedOperationException；(具体实现在后面的锁中讲，因为根据非公平性和公平性，实现方式是不同的)
 ```java
 //AQS中的tryAcquire
    protected boolean tryAcquire(int arg) {
@@ -178,7 +174,7 @@ private Node addWaiter(Node mode) {
     }
 ```
 
-对于acquireQueued()方法,可以看到，它会以死循环的方式从头节点开始获取同步状态
+对于acquireQueued()方法,可以看到，它会以死循环的方式从头节点开始获取同步状态，获取同步状态依旧是利用了tryAcquire()方法
 
 ```java
 //AQS
@@ -191,7 +187,7 @@ private Node addWaiter(Node mode) {
             for (;;) {
                 //获取前驱节点
                 final Node p = node.predecessor();
-                //
+                //判断结点的前驱节点是否为头节点，因为头节点是获取成功状态的节点，如果当前节点的前驱节点是头节点的话，那么下一个获取同步状态的就是这个节点了
                 if (p == head && tryAcquire(arg)) {
                     setHead(node);
                     p.next = null; // help GC
