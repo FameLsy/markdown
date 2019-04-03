@@ -5,6 +5,7 @@ tags:
 categories:
 - maven
 ---
+
 # Scope依赖作用域
 
 1. compile（默认值）：在编译、运行、测试、打包都有效；
