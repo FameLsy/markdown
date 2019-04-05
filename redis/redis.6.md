@@ -12,8 +12,10 @@ RDB方式是通过快照（snapshotting）完成的，当符合一定条件时Re
 - 执行flushall命令
 - 执行主从复制操作
 
-RDB持久化条件
+自定义配置的快照
 ```
+# redis.conf
+
 # 可配置多个条件，每个条件之间的关系是或
 #SAVE 900 1  ： 表示15分钟（900秒钟）内至少1个键被更改则进行快照。
 #SAVE 300 10 ： 表示5分钟（300秒）内至少10个键被更改则进行快照
@@ -22,12 +24,14 @@ SAVE seconds changes
 
 指定rdb快照文件的位置
 ```
-DIR path
+# redis.conf
+dir path
 ```
 
 指定rdb快照文件的名称（默认名dump.rdb）
 ```
-DBFILENAME dump.rdb
+# redis.conf
+dbfilename dump.rdb
 ```
 
 >Redis启动后会读取RDB快照文件，将数据从硬盘载入到内存。  
@@ -64,12 +68,14 @@ appendonly yes
 
 指定aof快照文件的位置
 ```
-DIR path
+# redis.conf
+dir path
 ```
 
 指定aof快照文件的名称(默认名：appendonly.aof)
 ```
-DBFILENAME appendonly.aof
+# redis.conf
+dbfilename dump.rdb
 ```
 ## AOF重写原理
 
@@ -80,10 +86,13 @@ DBFILENAME appendonly.aof
 
 
 ```
-# auto-aof-rewrite-percentage 100  
-表示当前aof文件大小超过上一次aof文件大小的百分之多少的时候会进行重写。如果之前没有重写过，以启动时aof文件大小为准
-# auto-aof-rewrite-min-size 64mb   
-限制允许重写最小aof文件大小，也就是文件大小小于64mb的时候，不需要进行优化
+# redis.config
+# 表示当前aof文件大小超过上一次aof文件大小的百分之多少的时候会进行重写。如果之前没有重写过，以启动时aof文件大小为准
+auto-aof-rewrite-percentage 100  
+
+# 限制允许重写最小aof文件大小，也就是文件大小小于64mb的时候，不需要进行优化
+auto-aof-rewrite-min-size 64mb   
+
 ```
 
 ## 同步磁盘数据
@@ -92,12 +101,16 @@ Redis每次更改数据的时候， aof机制都会将命令记录到aof文件�
 
 参数说明
 ```
-# appendfsync always  
-每次执行写入都会进行同步, 这个是最安全但是是效率比较低的方式
-# appendfsync everysec   
-每一秒执行
-# appendfsync no  
-不主动进行同步操作，由操作系统去执行，这个是最快但是最不安全的方式
+# redis.config
+# 每次执行写入都会进行同步, 这个是最安全但是是效率比较低的方式 
+appendfsync always  
+
+# 每一秒执行，推荐
+appendfsync everysec   
+
+# 不主动进行同步操作，由操作系统去执行，这个是最快但是最不安全的方式
+appendfsync no  
+
 ```
 
 # 如何选择RDB和AOF

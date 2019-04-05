@@ -21,6 +21,7 @@
 ## 从redis配置
 
 ```
+# redis.conf
 # masterip:主Redis ip
 # masterport： 主Redis 端口 
 slaveof masterip masterport
