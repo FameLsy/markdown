@@ -1,10 +1,10 @@
----
+<!-- ---
 title: maven(7) tomcat热部署
 tags: 
 - maven tomcat热部署
 categories:
 - maven
----
+--- -->
 
 ![tomcat](https://raw.githubusercontent.com/FameLsy/Images/master/hexo/tomcat.png)
 
@@ -41,7 +41,7 @@ categories:
 5. 运行命令
 ```
 //第一次部署
-tomcat:deploy
+tomcat7:deploy
 //再一次
-tomcat:redeploy
+tomcat7:redeploy
 ```

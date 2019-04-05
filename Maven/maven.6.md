@@ -1,10 +1,10 @@
----
+<!-- ---
 title: maven(6) 依赖
 tags: 
 - maven 依赖
 categories:
 - maven
----
+--- -->
 
 # Scope依赖作用域
 

@@ -1,10 +1,10 @@
----
+<!-- ---
 title: maven(4) 生命周期
 tags: 
 - maven 仓库
 categories:
 - maven
----
+--- -->
 
 # 构建生命周期
 要理解Maven的生命周期，必须知道以下三个概念

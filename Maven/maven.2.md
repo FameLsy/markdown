@@ -1,10 +1,10 @@
----
+<!-- ---
 title: maven(2) 仓库
 tags: 
 - maven 仓库
 categories:
 - maven
----
+--- -->
 
 
 # Maven的三种仓库
@@ -42,11 +42,11 @@ ${user.home}/.m2/repository
 在setting.xml中配置
 ```
 <!-- 找到mirrors标签,在里面添加添加 -->
-    <mirror>
+<mirror>
     <id>alimaven</id>
     <name>aliyun maven</name>
     <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
     <mirrorOf>central</mirrorOf>
-    </mirror>
+</mirror>
 ```
 

@@ -1,10 +1,10 @@
----
+<!-- ---
 title: maven(3) pom
 tags: 
 - maven pom
 categories:
 - maven
----
+--- -->
 
 
 |元素|说明|

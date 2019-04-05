@@ -1,10 +1,10 @@
----
+<!-- ---
 title: maven(1) 基础介绍
 tags: 
 - maven 基础介绍
 categories:
 - maven
----
+--- -->
 
 
 Maven是纯java开发
