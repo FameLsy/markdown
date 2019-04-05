@@ -4,10 +4,10 @@
 
 命令格式
 ```
-# 默认方式，默认ip 127.0.0.1,默认端口 6379
+# 默认方式，默认ip 127.0.0.1,默认端口 6379,相当于登录本地的redis
 ./redis-cli
 
-# ip: bind 绑定的ip才能访问redis
+# ip: bind 绑定的ip才能访问redis,访问远程redis
 ./redis-cli -h ip -p port
 ```
 
