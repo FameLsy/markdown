@@ -1,11 +1,3 @@
----
-title: Spring-IOC-简介
-tgas: 
-- Spring-IOC-简介
-categories: 
-- Spring 
----
-
 所谓的IoC容器就是指的Spring中Bean工厂里面的Map存储结构（存储了Bean的实例）
 
 对于 Spring 框架来说，就是由 Spring 来负责控制对象的生命周期和对象间的关系

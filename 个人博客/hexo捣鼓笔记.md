@@ -19,8 +19,9 @@ sudo apt-get install git
 ```
 Linux (Fedora, Red Hat, CentOS)
 ```Linux
-sudo yum install gi
+sudo yum install git
 ```
+
 ## 安装Node.js
 [Node.js官网](https://nodejs.org/en/)  
 安装**Node.js**,推荐使用**nvm**方式安装  

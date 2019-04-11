@@ -6,6 +6,11 @@ categories:
 - git
 ---
 
+创建配置文件
+```
+vim ~/.ssh/config
+```
+
 架设了bwg + v2ray,走的SOCKS,配置github代理如下
 ```xml
 Host github.com
